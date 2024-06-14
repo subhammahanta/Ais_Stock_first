@@ -1,0 +1,6 @@
+package com.watsoo.device.management.enums;
+
+public enum LastOnline {
+	TWO_DAYS_AGO, THREE_DAYS_AGO, SEVEN_DAYS_AGO, TEN_DAYS_AGO, FIFTEEN_DAYS_AGO, TWENTY_DAYS_AGO, THIRTY_DAYS_AGO,
+	MORE_THEN_THIRTY_DAYS_AGO
+}
