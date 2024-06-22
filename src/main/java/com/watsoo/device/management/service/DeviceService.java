@@ -3,11 +3,7 @@ package com.watsoo.device.management.service;
 import java.io.IOException;
 import java.util.List;
 
-import com.watsoo.device.management.dto.ConfigurationDTO;
-import com.watsoo.device.management.dto.GenericRequestBody;
-import com.watsoo.device.management.dto.Pagination;
-import com.watsoo.device.management.dto.Response;
-import com.watsoo.device.management.dto.VehicleLazyEntity;
+import com.watsoo.device.management.dto.*;
 import com.watsoo.device.management.model.Device;
 import com.watsoo.device.management.model.DeviceLite;
 import com.watsoo.device.management.model.DeviceLiteV3;
@@ -68,5 +64,6 @@ public interface DeviceService {
 	void generateUnConfigureDevicesExcelAndNotify(GenericRequestBody requestDTO) throws Exception;
 
 	Pagination<List<DeviceLite>> getDeviceForReconfigure(GenericRequestBody requestDTO);
+
 
 }

@@ -25,7 +25,12 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
 	@Autowired
 	private BoxRepository boxRepository;
+	
+	@Autowired
+	private BoxRepository boxRepository2;
 
+	 
+	
 	@Override
 	public Response<?> checkDeviceAvailability(int requestedQuantity) {
 		List<BoxDTO> filteredBoxes = new ArrayList<>();

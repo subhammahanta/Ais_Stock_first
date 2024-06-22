@@ -254,6 +254,8 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
 		};
 	}
 
+
+
 	@Query(value = "select * from device where DATE(created_at)=DATE(:today)", nativeQuery = true)
 	List<Device> findByCreatedAt(@Param("today") String today);
 

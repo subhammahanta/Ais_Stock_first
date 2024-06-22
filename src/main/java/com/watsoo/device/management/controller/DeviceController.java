@@ -3,6 +3,7 @@ package com.watsoo.device.management.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.watsoo.device.management.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.watsoo.device.management.dto.ConfigurationDTO;
-import com.watsoo.device.management.dto.GenericRequestBody;
-import com.watsoo.device.management.dto.Pagination;
-import com.watsoo.device.management.dto.Response;
-import com.watsoo.device.management.dto.VehicleLazyEntity;
 import com.watsoo.device.management.model.Device;
 import com.watsoo.device.management.model.DeviceLite;
 import com.watsoo.device.management.model.DeviceLiteV3;
@@ -37,6 +33,8 @@ public class DeviceController {
 
 	@Autowired
 	private DeviceService deviceService;
+
+
 
 	@PostMapping("/save/device")
 	public ResponseEntity<?> saveDeviceData(@RequestBody Device device) {

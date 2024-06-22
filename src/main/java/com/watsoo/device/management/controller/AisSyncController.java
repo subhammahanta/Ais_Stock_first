@@ -18,6 +18,11 @@ public class AisSyncController {
 	@Autowired
 	private AisSyncService aisSyncService;
 	
+	@Autowired
+	private AisSyncService asiAisSyncService;
+	
+	
+	
 	@PostMapping("/get/All")
 	public ResponseEntity<?> getAllDevice(@RequestBody GenericRequestBody requestDTO) {
 		return new ResponseEntity<>(aisSyncService.getAllDevice(requestDTO), HttpStatus.OK);
