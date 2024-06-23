@@ -19,7 +19,7 @@ CREATE TABLE `removal_device` (
   `iccid_no` varchar(50) DEFAULT NULL,
   `old_expiry_date` date DEFAULT NULL,
   `new_expiry_date` date DEFAULT NULL,
-  `request_id` varchar(100) DEFAULT NULL,
+   `request_id` bigint(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `request_id` (`request_id`)
    );
