@@ -27,14 +27,7 @@ public class DeviceRenewalController {
         return  response;
     }
 
-    @GetMapping("/getByRequestId/{requestId}")
-    public Response<?> getDeviceRenewalData(@PathVariable("requestId") int requestId){
 
-         Response<?> response= deviceRenewalRequestService.getDeviceRenewalDataById(requestId);
-
-
-        return  response;
-    }
 
 
 }
