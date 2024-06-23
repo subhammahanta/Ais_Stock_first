@@ -2,6 +2,7 @@ package com.watsoo.device.management.serviceImpl;
 
 import com.watsoo.device.management.dto.DeviceRenewal;
 import com.watsoo.device.management.dto.DeviceRenewalRequestDTO;
+import com.watsoo.device.management.dto.DeviceRenewalResponseDTO;
 import com.watsoo.device.management.dto.Response;
 import com.watsoo.device.management.model.*;
 import com.watsoo.device.management.repository.*;
@@ -101,6 +102,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
         return new Response<>(HttpStatus.CREATED.value(), "Request Created Successfully",savedDeviceRenewalObject);
     }
 
+
     private String generateRequestCode() {
 
         String businessPrefix = "REQ";
@@ -108,4 +110,24 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
         String uniqueRequestCode = businessPrefix + "-" + uuid.toString();
         return  uniqueRequestCode;
     }
+
+
+    @Override
+    public Response<Object> getRenewalDevicesById(Long requestId) {
+
+
+        List<Object[]> deviceRenewalResponseDTOS=deviceRenewalRequestRepository.getRenewalDevicesById(requestId);
+
+         if(deviceRenewalResponseDTOS!=null){
+             return  new Response<>(HttpStatus.OK.value(), "List of renewal Devices",deviceRenewalResponseDTOS);
+         }
+         else{
+             return  new Response<>(HttpStatus.NOT_FOUND.value(), "No renwal Devices Found");
+
+         }
+
+
+    }
+
+
 }
