@@ -1,6 +1,7 @@
 package com.watsoo.device.management.controller;
 import com.watsoo.device.management.dto.DeviceRenewalRequestDTO;
 
+import com.watsoo.device.management.dto.Response;
 import com.watsoo.device.management.service.DeviceRenewalRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,11 @@ public class DeviceRenewalController {
 
 
     @PostMapping("/save/device_renewal_request")
-    public ResponseEntity<?> saveDeviceRenewalData(@RequestBody DeviceRenewalRequestDTO deviceRenewalRequest){
+    public Response<?> saveDeviceRenewalData(@RequestBody DeviceRenewalRequestDTO deviceRenewalRequest){
 
-              deviceRenewalRequestService.saveDeviceRenewalRequest(deviceRenewalRequest);
+         Response<?> response= deviceRenewalRequestService.saveDeviceRenewalRequest(deviceRenewalRequest);
 
 
-        return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return  response;
     }
 }
