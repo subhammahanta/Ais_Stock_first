@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface DeviceRenewalRequestService {
 
-    Response<Object> saveDeviceRenewalRequest(DeviceRenewalRequestDTO deviceRenewalRequestDTO);
+    Response<?> saveDeviceRenewalRequest(DeviceRenewalRequestDTO deviceRenewalRequestDTO);
 
     Response<?> getRenewalDevicesById(Long requestId);
 }

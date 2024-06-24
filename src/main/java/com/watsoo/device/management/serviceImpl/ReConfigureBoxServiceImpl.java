@@ -496,7 +496,7 @@ public class ReConfigureBoxServiceImpl implements ReConfigureBoxService {
 		if (request.getReConfigureBoxId() == null || request.getBoxId() == null) {
 			return new Response<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
 		}
-		Response<BoxDeviceResponseDTO> response = new Response<>();
+		Response<BoxDeviceResponseDTO> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		List<BoxDevice> boxList = boxDeviceRepository.FindByBox_idAndIsActiveTrue(request.getBoxId());
 		if (boxList != null && boxList.size() > 0) {
 			BoxDeviceDTO boxDeviceDTO = new BoxDeviceDTO();

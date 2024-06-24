@@ -39,7 +39,7 @@ public class BoxController {
 	@PostMapping(value = "v1/get/all/box")
 	public ResponseEntity<?> getVehicleMaintenance(@RequestParam(required = true, defaultValue = "0") int pageNo,
 			@RequestParam(required = true, defaultValue = "0") int pageSize, @RequestBody BoxDTO boxDTO) {
-		Response<Pagination<List<BoxDTO>>> response = new Response<>();
+		Response<Pagination<List<BoxDTO>>> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		// Pagination<List<BoxDTO>> resp = boxService.getAllBox(pageNo, pageSize,
 		// boxDTO);
 		Pagination<List<BoxDTO>> resp = boxService.getAllBoxLite(pageNo, pageSize, boxDTO);

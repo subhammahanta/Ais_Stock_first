@@ -1,9 +1,7 @@
 package com.watsoo.device.management.serviceImpl;
 
-import com.watsoo.device.management.dto.DeviceRenewal;
-import com.watsoo.device.management.dto.DeviceRenewalRequestDTO;
-import com.watsoo.device.management.dto.DeviceRenewalResponseDTO;
-import com.watsoo.device.management.dto.Response;
+import com.watsoo.device.management.dto.*;
+import com.watsoo.device.management.exception.ResourceNotFoundException;
 import com.watsoo.device.management.model.*;
 import com.watsoo.device.management.repository.*;
 import com.watsoo.device.management.service.DeviceRenewalRequestService;
@@ -14,10 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestService {
@@ -38,8 +33,10 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
     private static RenewalDevice renewalDevice;
 
+    private static DeviceRenewalSavedDataResponse deviceRenewalSavedDataResponse=null;
+
     @Override
-    public Response<Object> saveDeviceRenewalRequest(DeviceRenewalRequestDTO deviceRenewalRequestDTO) {
+    public Response<?> saveDeviceRenewalRequest(DeviceRenewalRequestDTO deviceRenewalRequestDTO) {
 
         //To fetch total no of request code present in DB
         int total_request_code = deviceRenewalRequestRepository.countTotalItems();
@@ -65,41 +62,56 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
         DeviceRenewalRequest  savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
 
         Long requestId = savedDeviceRenewalObject.getId();
+
         List<DeviceRenewal> deviceRenewalsList = deviceRenewalRequestDTO.getDeviceRenewalList();
+        List<DeviceRenewalSavedDataResponse> deviceRenewalSavedDataResponses=new ArrayList<>();
+
+
 
         deviceRenewalsList.stream().forEach(item -> {
 
             String iccidNo = item.getIccidNo();
+
+            deviceRenewalSavedDataResponse=new DeviceRenewalSavedDataResponse();
 
             Optional<Device> deviceOptional = deviceRepository.findByIccidNo(iccidNo);
 
              renewalDevice = new RenewalDevice();
 
             if (deviceOptional.isPresent()) {
+
                 Device device = deviceOptional.get();
                 renewalDevice.setDeviceId(device.getId());
                 renewalDevice.setImeiNo(device.getImeiNo());
                 renewalDevice.setIccidNo(device.getIccidNo());
                 renewalDevice.setOldExpiryDate(device.getSim2ExpiryDate());
 
+                deviceRenewalSavedDataResponse.setIccidNo(device.getIccidNo());
                 SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
                 try {
+                    if(item.getDate()!=null){
                     Date date = inputFormat.parse(item.getDate());
                     renewalDevice.setNewExpiryDate(date);
-                    renewalDevice.setRequestId(requestId);
-                    renewalDeviceRepository.save(renewalDevice);
 
+                    }
+                    else{
+                        renewalDevice.setNewExpiryDate(null);
+                    }
+                    renewalDevice.setRequestId(requestId);
+               RenewalDevice renewalDevice1=     renewalDeviceRepository.save(renewalDevice);
+                    deviceRenewalSavedDataResponse.setNewExpiryDate(renewalDevice1.getNewExpiryDate());
+                    deviceRenewalSavedDataResponses.add(deviceRenewalSavedDataResponse);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
             } else {
 
-              throw  new RuntimeException("IICID Not Found");
+             throw new ResourceNotFoundException("ICCID not found");
 
             }
 
         });
-        return new Response<>(HttpStatus.CREATED.value(), "Request Created Successfully",savedDeviceRenewalObject);
+        return new Response<>(HttpStatus.OK.value(),deviceRenewalSavedDataResponses,"Created Successfully",requestCode);
     }
 
 

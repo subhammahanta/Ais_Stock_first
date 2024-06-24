@@ -50,7 +50,7 @@ public class DeviceDashboardServiceImpl implements DeviceDashboardService {
 	
 	@Override
 	public Response<List<DashboardSectionDTO>> getDashBoardDTO() throws Exception {
-		Response<List<DashboardSectionDTO>> response = new Response<>();
+		Response<List<DashboardSectionDTO>> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		List<DashboardSectionDTO> responseObj = new ArrayList<>();
 		List<DeviceBlueprintMap> deviceBluePrintList = deviceBluePrintRepository.findAll();
 		Map<DeviceMaster, List<DeviceBlueprintMap>> deviceBluePrintMap = deviceBluePrintList.stream()

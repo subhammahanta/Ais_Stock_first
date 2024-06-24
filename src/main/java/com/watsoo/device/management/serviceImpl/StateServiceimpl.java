@@ -110,7 +110,7 @@ public class StateServiceimpl implements StateService {
 
 	@Override
 	public Response<?> addUpdateConfig(StateCommandDTO dto) {
-		Response<Object> response = new Response<>();
+		Response<Object> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		if (dto.getStateCmdMstrId() != null) {
 			// update or delete
 			Optional<StateCmdMstrEntity> stateCmd = stateCmdMstrRepository.findById(dto.getStateCmdMstrId());

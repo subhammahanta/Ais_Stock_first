@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
 	public Response<?> findUserById(Long id) {
 		try {
 			Optional<User> userData = userRepository.findById(id);
-			Response<?> response = new Response<>();
+			Response<?> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 			if (userData != null && userData.isPresent()) {
 				response = new Response<>(HttpStatus.OK.value(), HttpStatus.OK.name(), userData);
 			} else {

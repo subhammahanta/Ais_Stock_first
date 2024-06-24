@@ -128,7 +128,7 @@ public class CommandServiceImpl implements CommandService {
 
 	@Override
 	public Response<String> shootCoreCommandDevice(DeviceCommandDTO deviceCommandDTO) {
-		Response<String> response = new Response<>();
+		Response<String> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		JsonObject requestBody = null;
 		String coreResponse = "";
 		requestBody = Utility.commandJsonObject(deviceCommandDTO.getDeviceId(), deviceCommandDTO.getCommand());
@@ -762,7 +762,7 @@ public class CommandServiceImpl implements CommandService {
 	}
 
 	public Response<String> shootCoreCommandDeviceV2(DeviceCommandDTO deviceCommandDTO) {
-		Response<String> response = new Response<>();
+		Response<String> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		JsonObject requestBody = Utility.commandJsonObject(deviceCommandDTO.getDeviceId(),
 				deviceCommandDTO.getCommand());
 		String coreResponse = httpUtility.httpPost(

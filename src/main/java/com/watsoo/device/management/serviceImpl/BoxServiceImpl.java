@@ -225,7 +225,7 @@ public class BoxServiceImpl implements BoxService {
 
 	@Override
 	public Response<BoxDeviceDTO> getById(Long id) {
-		Response<BoxDeviceDTO> response = new Response<>();
+		Response<BoxDeviceDTO> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		List<BoxDevice> boxList = boxDeviceRepository.FindByBox_idAndIsActiveTrue(id);
 		BoxDeviceDTO boxDeviceDTO = new BoxDeviceDTO();
 		if (boxList != null && boxList.size() > 0) {

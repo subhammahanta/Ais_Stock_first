@@ -297,7 +297,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public Response<Device> getDevice(String imei) {
-        Response<Device> response = new Response<>();
+        Response<Device> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
         Optional<Device> deviceExist = deviceRepository.findByImeiNo(imei);
         if (deviceExist.isPresent()) {
             response.setData(deviceExist.get());
@@ -314,7 +314,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public Response<GenericRequestBody> getAppVersion() {
-        Response<GenericRequestBody> response = new Response<>();
+        Response<GenericRequestBody> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
         try {
             Configuration config = configRepo.findByKey("version");
             if (config != null) {
@@ -596,7 +596,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public Response<?> countNumberOfDeviceCreatedToday() {
-        Response<Integer> response = new Response<>();
+        Response<Integer> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
         try {
             System.out.println("************************************************************************************");
             System.out.println("*********************************DAILY PRODUCTION EMAIL*****************************");
@@ -665,7 +665,7 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public Response<List<Device>> updateDeviceStatus(GenericRequestBody requestBody) {
         List<Device> imeiExist = deviceRepository.findAllById(requestBody.getIds());
-        Response<List<Device>> response = new Response<>();
+        Response<List<Device>> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
         if (imeiExist != null && imeiExist.size() > 0) {
             for (Device device : imeiExist) {
                 device.setStatus(requestBody.getStatusMaster());
@@ -686,7 +686,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public Response<Device> updateDeviceState(GenericRequestBody requestBody) {
-        Response<Device> response = new Response<>();
+        Response<Device> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
         if (requestBody.getDeviceId() != null && requestBody.getDeviceId() > 0 && requestBody.getStateId() != null
                 && requestBody.getStateId() > 0) {
             Optional<Device> deviceExist = deviceRepository.findById(requestBody.getDeviceId());
@@ -724,7 +724,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public Response<GenericRequestBody> getAllUniqueSoftwareVersion() {
-        Response<GenericRequestBody> response = new Response<>();
+        Response<GenericRequestBody> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
         try {
             List<Device> deviceList = deviceRepository.findAll();
             if (deviceList != null && !deviceList.isEmpty()) {
@@ -847,7 +847,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public Response<?> getCurrentVersion() {
-        Response<Object> response = new Response<>();
+        Response<Object> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
         try {
             RestTemplate restTemplate = new RestTemplate();
             String url = aisCommandUrl + "api/getCurrentVersion";
@@ -865,7 +865,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public Response<?> updateSoftwareVersion(ConfigurationDTO dto) {
-        Response<Object> response = new Response<>();
+        Response<Object> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 
         if (dto != null && dto.getSoftwareVersion() != null && dto.getSoftwareVersion() != "") {
             try {
@@ -920,7 +920,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public Response<List<Device>> getAisDevice(String imei) {
-        Response<List<Device>> response = new Response<>();
+        Response<List<Device>> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
         List<Device> deviceExist = deviceRepository.findByLikeImeiNo(imei);
         if (deviceExist != null && deviceExist.size() > 0) {
             response.setData(deviceExist);
@@ -988,7 +988,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public Response<GenericRequestBody> getAllUniqueSoftwareVersionV2() {
-        Response<GenericRequestBody> response = new Response<>();
+        Response<GenericRequestBody> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
         try {
             List<Device> deviceList = deviceRepository.findAll();
             if (deviceList != null && !deviceList.isEmpty()) {
@@ -1054,7 +1054,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public Response<List<DeviceLite>> getAllDeviceByListOfImei(GenericRequestBody requestDTO) {
-        Response<List<DeviceLite>> response = new Response<List<DeviceLite>>();
+        Response<List<DeviceLite>> response = new Response<List<DeviceLite>>(HttpStatus.NOT_FOUND, "ICCID not Found");
         if (requestDTO.getImeiNoList() != null && !requestDTO.getImeiNoList().isEmpty()) {
             try {
                 List<DeviceLite> deviceLites = deviceLiteRepository.findAllByImeiNoIn(requestDTO.getImeiNoList());
@@ -1080,7 +1080,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     public Response<GenericRequestBody> getAllUniqueSoftwareVersionV3() {
-        Response<GenericRequestBody> response = new Response<>();
+        Response<GenericRequestBody> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
         try {
             List<Device> deviceList = deviceRepository.findAll();
             if (deviceList != null && !deviceList.isEmpty()) {
