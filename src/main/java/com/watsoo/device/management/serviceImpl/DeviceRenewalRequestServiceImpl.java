@@ -125,18 +125,22 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
         });
 
         if(iccidNotFoundCount==0) {
-            return new Response<>(HttpStatus.OK.value(), deviceRenewalSavedDataResponses, "Created Successfully", requestCode);
+            return new Response<>(HttpStatus.OK.value(), deviceRenewalSavedDataResponses, "Updated  Successfully", requestCode);
         }
 
-        else if(iccidNotFoundCount>0){
-            return new Response<>(HttpStatus.OK.value(), deviceRenewalSavedDataResponses, "Created Successfully with some unsucessful attempts No Iccid Found", requestCode);
-
-        }
 
         else if(iccidNotFoundCount==deviceRenewalListSize){
 
-            return new Response<>(HttpStatus.NOT_FOUND.value(), deviceRenewalSavedDataResponses, "ICCID NOT FOUND", requestCode);
-         }
+
+            return new Response<>(HttpStatus.NOT_FOUND.value(), deviceRenewalSavedDataResponses, "No Such  ICCID's  FOUND", requestCode);
+        }
+
+        else if(iccidNotFoundCount>0){
+
+            return new Response<>(HttpStatus.OK.value(), deviceRenewalSavedDataResponses, "Updated Successfully with some unsucessful attempts (No such  Iccid Found)", requestCode);
+
+        }
+
 
         else{
             return  null;
