@@ -73,6 +73,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
        int deviceRenewalListSize=deviceRenewalsList.size();
 
+        this.iccidNotFoundCount=0;
         deviceRenewalsList.stream().forEach(item -> {
 
             String iccidNo = item.getIccidNo();
@@ -130,12 +131,13 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
 
         else if(iccidNotFoundCount==deviceRenewalListSize){
-
+            System.out.println("**&(*&*&*&*&*&ICCIDNOTFOUNDCOUNT= "+iccidNotFoundCount);
 
             return new Response<>(HttpStatus.NOT_FOUND.value(), deviceRenewalSavedDataResponses, "No Such  ICCID's  FOUND", requestCode);
         }
 
         else if(iccidNotFoundCount>0){
+            System.out.println("&^&^&^&^&^ICCIDNOTFOUNDCOUNT= "+iccidNotFoundCount);
 
             return new Response<>(HttpStatus.OK.value(), deviceRenewalSavedDataResponses, "Updated Successfully with some unsucessful attempts (No such  Iccid Found)", requestCode);
 
