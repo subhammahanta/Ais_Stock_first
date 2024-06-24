@@ -98,7 +98,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
             }
 
         });
-        return new Response<>(HttpStatus.CREATED.value(), "Request Created Successfully",savedDeviceRenewalObject);
+        return new Response<>(HttpStatus.CREATED.value(), "Request Created Successfully",renewalDevice);
     }
 
     private String generateRequestCode() {
