@@ -7,15 +7,11 @@ public class DeviceRenewalResponseDTO {
 
     private String reqCode;
 
-    private Integer totalDevice;
+    private Long deviceId;
 
-    private Integer id;
+    private String imeiNo;
 
-    private Date createdAt;
-
-    private String createdBy;
-
-    private List<DeviceRenewalDetails> details;
+    private String iccidNo;
 
     public String getReqCode() {
         return reqCode;
@@ -25,43 +21,27 @@ public class DeviceRenewalResponseDTO {
         this.reqCode = reqCode;
     }
 
-    public Integer getTotalDevice() {
-        return totalDevice;
+    public Long getDeviceId() {
+        return deviceId;
     }
 
-    public void setTotalDevice(Integer totalDevice) {
-        this.totalDevice = totalDevice;
+    public void setDeviceId(Long deviceId) {
+        this.deviceId = deviceId;
     }
 
-    public Integer getId() {
-        return id;
+    public String getImeiNo() {
+        return imeiNo;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setImeiNo(String imeiNo) {
+        this.imeiNo = imeiNo;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getIccidNo() {
+        return iccidNo;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public List<DeviceRenewalDetails> getDetails() {
-        return details;
-    }
-
-    public void setDetails(List<DeviceRenewalDetails> details) {
-        this.details = details;
+    public void setIccidNo(String iccidNo) {
+        this.iccidNo = iccidNo;
     }
 }

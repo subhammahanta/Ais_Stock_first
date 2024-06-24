@@ -14,29 +14,42 @@ public class RenewalDevice {
     @Column(name = "device_id")
     private Long deviceId;
 
-    @Column(name = "request_id")
-    private Long requestId;
+
+
+    @ManyToOne
+    @JoinColumn(name = "request_id")
+    private DeviceRenewalRequest deviceRenewalRequest;
 
     public RenewalDevice() {
     }
 
-    public RenewalDevice(Long deviceId, Long requestId, String imeiNo, String iccidNo, Date oldExpiryDate, Date newExpiryDate) {
+    @Override
+    public String toString() {
+        return "RenewalDevice{" +
+                "id=" + id +
+                ", deviceId=" + deviceId +
+                ", imeiNo='" + imeiNo + '\'' +
+                ", iccidNo='" + iccidNo + '\'' +
+                ", oldExpiryDate=" + oldExpiryDate +
+                ", newExpiryDate=" + newExpiryDate +
+                '}';
+    }
+
+    public RenewalDevice(Long deviceId, DeviceRenewalRequest deviceRenewalRequest, String imeiNo, String iccidNo, Date oldExpiryDate, Date newExpiryDate) {
         this.deviceId = deviceId;
-        this.requestId = requestId;
+        this.deviceRenewalRequest = deviceRenewalRequest;
         this.imeiNo = imeiNo;
         this.iccidNo = iccidNo;
         this.oldExpiryDate = oldExpiryDate;
         this.newExpiryDate = newExpiryDate;
     }
 
-
-
-    public Long getRequestId() {
-        return requestId;
+    public DeviceRenewalRequest getDeviceRenewalRequest() {
+        return deviceRenewalRequest;
     }
 
-    public void setRequestId(Long requestId) {
-        this.requestId = requestId;
+    public void setDeviceRenewalRequest(DeviceRenewalRequest deviceRenewalRequest) {
+        this.deviceRenewalRequest = deviceRenewalRequest;
     }
 
     @Column(name = "imei_no")

@@ -1,12 +1,13 @@
 package com.watsoo.device.management.serviceImpl;
 
 import com.watsoo.device.management.dto.*;
-import com.watsoo.device.management.exception.ResourceNotFoundException;
 import com.watsoo.device.management.model.*;
 import com.watsoo.device.management.repository.*;
 import com.watsoo.device.management.service.DeviceRenewalRequestService;
-import com.watsoo.device.management.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -103,7 +104,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     else{
                         renewalDevice.setNewExpiryDate(null);
                     }
-                    renewalDevice.setRequestId(requestId);
+                    renewalDevice.setDeviceRenewalRequest(savedDeviceRenewalObject);
                RenewalDevice renewalDevice1=     renewalDeviceRepository.save(renewalDevice);
                     deviceRenewalSavedDataResponse.setNewExpiryDate(renewalDevice1.getNewExpiryDate());
                     deviceRenewalSavedDataResponse.setUpdated(true);
@@ -112,7 +113,14 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     throw new RuntimeException(e);
                 }
             } else {
-
+                SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                Date date = null;
+                try {
+                    date = inputFormat.parse(item.getDate());
+                deviceRenewalSavedDataResponse.setNewExpiryDate(date);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
                     deviceRenewalSavedDataResponse.setUpdated(false);
                     deviceRenewalSavedDataResponse.setIccidNo(iccidNo);
 
@@ -150,6 +158,24 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
     }
 
+    @Override
+    public Response<?> getRenewalDevices(Integer pageNo, Integer pageSize) {
+
+        Pageable pageable= PageRequest.of(pageNo,pageSize);
+
+
+                Page<DeviceRenewalRequest> deviceRenewalRequests= deviceRenewalRequestRepository.getAllRenewalDevices(pageable);
+
+                List<DeviceRenewalRequest>res= deviceRenewalRequests.getContent();
+
+        System.out.println("Page Size = "+res.size());
+
+                  res.stream().forEach(System.out::println);
+
+
+
+        return null;
+    }
 
 
     private String generateRequestCode() {
@@ -161,22 +187,6 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
     }
 
 
-    @Override
-    public Response<Object> getRenewalDevicesById(Long requestId) {
-
-
-        List<Object[]> deviceRenewalResponseDTOS=deviceRenewalRequestRepository.getRenewalDevicesById(requestId);
-
-         if(deviceRenewalResponseDTOS!=null){
-             return  new Response<>(HttpStatus.OK.value(), "List of renewal Devices",deviceRenewalResponseDTOS);
-         }
-         else{
-             return  new Response<>(HttpStatus.NOT_FOUND.value(), "No renwal Devices Found");
-
-         }
-
-
-    }
 
 
 }
