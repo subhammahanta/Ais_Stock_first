@@ -35,6 +35,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
     private static DeviceRenewalSavedDataResponse deviceRenewalSavedDataResponse=null;
 
+
         int iccidNotFoundCount=0;
 
     @Override
@@ -68,6 +69,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
         List<DeviceRenewal> deviceRenewalsList = deviceRenewalRequestDTO.getDeviceRenewalList();
         List<DeviceRenewalSavedDataResponse> deviceRenewalSavedDataResponses=new ArrayList<>();
+        List<DeviceRenewalSavedDataResponse> deviceRenewalUnSavedDataResponses=new ArrayList<>();
 
        int deviceRenewalListSize=deviceRenewalsList.size();
 
@@ -111,6 +113,10 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
             } else {
 
                     deviceRenewalSavedDataResponse.setUpdated(false);
+                    deviceRenewalSavedDataResponse.setIccidNo(iccidNo);
+
+                    deviceRenewalSavedDataResponses.add(deviceRenewalSavedDataResponse);
+
                  iccidNotFoundCount=iccidNotFoundCount+1;
              //throw new ResourceNotFoundException("ICCID not found");
 
@@ -123,7 +129,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
         }
 
         else if(iccidNotFoundCount>0){
-            return new Response<>(HttpStatus.OK.value(), deviceRenewalSavedDataResponses, "Created Successfully with some unsucessful attempts", requestCode);
+            return new Response<>(HttpStatus.OK.value(), deviceRenewalSavedDataResponses, "Created Successfully with some unsucessful attempts No Iccid Found", requestCode);
 
         }
 
