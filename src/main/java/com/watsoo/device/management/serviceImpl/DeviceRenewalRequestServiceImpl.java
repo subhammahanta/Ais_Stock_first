@@ -35,11 +35,14 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
     private static DeviceRenewalSavedDataResponse deviceRenewalSavedDataResponse=null;
 
+        int iccidNotFoundCount=0;
+
     @Override
     public Response<?> saveDeviceRenewalRequest(DeviceRenewalRequestDTO deviceRenewalRequestDTO) {
 
         //To fetch total no of request code present in DB
         int total_request_code = deviceRenewalRequestRepository.countTotalItems();
+
 
         String requestCode = generateRequestCode();
 
@@ -66,7 +69,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
         List<DeviceRenewal> deviceRenewalsList = deviceRenewalRequestDTO.getDeviceRenewalList();
         List<DeviceRenewalSavedDataResponse> deviceRenewalSavedDataResponses=new ArrayList<>();
 
-
+       int deviceRenewalListSize=deviceRenewalsList.size();
 
         deviceRenewalsList.stream().forEach(item -> {
 
@@ -100,19 +103,41 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     renewalDevice.setRequestId(requestId);
                RenewalDevice renewalDevice1=     renewalDeviceRepository.save(renewalDevice);
                     deviceRenewalSavedDataResponse.setNewExpiryDate(renewalDevice1.getNewExpiryDate());
+                    deviceRenewalSavedDataResponse.setUpdated(true);
                     deviceRenewalSavedDataResponses.add(deviceRenewalSavedDataResponse);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
             } else {
 
-             throw new ResourceNotFoundException("ICCID not found");
+                    deviceRenewalSavedDataResponse.setUpdated(false);
+                 iccidNotFoundCount=iccidNotFoundCount+1;
+             //throw new ResourceNotFoundException("ICCID not found");
 
             }
 
         });
-        return new Response<>(HttpStatus.OK.value(),deviceRenewalSavedDataResponses,"Created Successfully",requestCode);
+
+        if(iccidNotFoundCount==0) {
+            return new Response<>(HttpStatus.OK.value(), deviceRenewalSavedDataResponses, "Created Successfully", requestCode);
+        }
+
+        else if(iccidNotFoundCount>0){
+            return new Response<>(HttpStatus.OK.value(), deviceRenewalSavedDataResponses, "Created Successfully with some unsucessful attempts", requestCode);
+
+        }
+
+        else if(iccidNotFoundCount==deviceRenewalListSize){
+
+            return new Response<>(HttpStatus.NOT_FOUND.value(), deviceRenewalSavedDataResponses, "ICCID NOT FOUND", requestCode);
+         }
+
+        else{
+            return  null;
+        }
+
     }
+
 
 
     private String generateRequestCode() {

@@ -16,9 +16,7 @@ public interface DeviceRenewalRequestRepository extends JpaRepository<DeviceRene
     int countTotalItems();
 
 
-    @Query(value = "SELECT DISTINCT d.id, d.req_code, r.device_id, r.imei_no, r.iccid_no, r.old_expiry_date, r.new_expiry_date " +
-            "FROM device_renewal_request d " +
-            "INNER JOIN renewal_device r ON d.id = r.request_id " +
-            "and d.id = :requestId", nativeQuery = true)
+    @Query(value = "select distinct d.created_by,d.created_at,d.id,d.req_code ,r.device_id,r.iccid_no,r.old_expiry_date," +
+            "r.new_expiry_date from device_renewal_request d inner join renewal_device r where d.id=r.request_id and d.id=:requestId;  ", nativeQuery = true)
     List<Object[]> getRenewalDevicesById(@Param("requestId") Long requestId);
 }

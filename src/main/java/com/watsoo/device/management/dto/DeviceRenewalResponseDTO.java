@@ -1,59 +1,67 @@
 package com.watsoo.device.management.dto;
 
 import java.util.Date;
+import java.util.List;
 
 public class DeviceRenewalResponseDTO {
 
-    private int deviceId;
+    private String reqCode;
 
-    private String imeiNo;
+    private Integer totalDevice;
 
-    private String iccidNo;
+    private Integer id;
 
-    private Date oldExpiryDate;
+    private Date createdAt;
 
-    private Date newExpiryDate;
+    private String createdBy;
 
-    public DeviceRenewalResponseDTO() {
+    private List<DeviceRenewalDetails> details;
+
+    public String getReqCode() {
+        return reqCode;
     }
 
-    public int getDeviceId() {
-        return deviceId;
+    public void setReqCode(String reqCode) {
+        this.reqCode = reqCode;
     }
 
-    public void setDeviceId(int deviceId) {
-        this.deviceId = deviceId;
+    public Integer getTotalDevice() {
+        return totalDevice;
     }
 
-    public String getImeiNo() {
-        return imeiNo;
+    public void setTotalDevice(Integer totalDevice) {
+        this.totalDevice = totalDevice;
     }
 
-    public void setImeiNo(String imeiNo) {
-        this.imeiNo = imeiNo;
+    public Integer getId() {
+        return id;
     }
 
-    public String getIccidNo() {
-        return iccidNo;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setIccidNo(String iccidNo) {
-        this.iccidNo = iccidNo;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public Date getOldExpiryDate() {
-        return oldExpiryDate;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public void setOldExpiryDate(Date oldExpiryDate) {
-        this.oldExpiryDate = oldExpiryDate;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public Date getNewExpiryDate() {
-        return newExpiryDate;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public void setNewExpiryDate(Date newExpiryDate) {
-        this.newExpiryDate = newExpiryDate;
+    public List<DeviceRenewalDetails> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<DeviceRenewalDetails> details) {
+        this.details = details;
     }
 }
