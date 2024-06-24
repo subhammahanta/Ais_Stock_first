@@ -11,7 +11,7 @@ create table `device_renewal_request`(
   primary key (`id`)
 );
 
-drop table if exists `removal_device`;
+drop table if exists `renewal_device`;
 CREATE TABLE `removal_device` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `device_id` int NOT NULL,
