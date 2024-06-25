@@ -1,20 +1,14 @@
 package com.watsoo.device.management.serviceImpl;
-
 import com.watsoo.device.management.dto.*;
 import com.watsoo.device.management.model.*;
 import com.watsoo.device.management.repository.*;
 import com.watsoo.device.management.service.DeviceRenewalRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 @Service
 public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestService {
     @Autowired
