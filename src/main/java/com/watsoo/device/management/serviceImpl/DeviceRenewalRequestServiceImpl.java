@@ -215,10 +215,10 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
           for(RenewalDevice item:renewalDeviceList){
               DeviceDetailsDto deviceDetailsDto=new DeviceDetailsDto();
-              deviceDetailsDto.setDeviceImei(item.getImeiNo());
-              deviceDetailsDto.setIccId(item.getIccidNo());
-              deviceDetailsDto.setOldExpDate(item.getOldExpiryDate());
-              deviceDetailsDto.setNewExpDate(item.getNewExpiryDate());
+              deviceDetailsDto.setImeiNo(item.getImeiNo());
+              deviceDetailsDto.setIccidNo(item.getIccidNo());
+              deviceDetailsDto.setOldExpiryDate(item.getOldExpiryDate());
+              deviceDetailsDto.setNewExpiryDate(item.getNewExpiryDate());
               deviceDetailsDto.setDeviceId(item.getDeviceId());
               deviceDetailsDto.setRequestId(item.getDeviceRenewalRequest().getId());
               deviceDetailsDtolist.add(deviceDetailsDto);
