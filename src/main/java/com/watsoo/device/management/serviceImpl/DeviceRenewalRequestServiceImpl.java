@@ -164,24 +164,6 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
     }
 
 
-    @Override
-    public Page<DeviceRenewalRequest> findByCriteria(String search, Date fromDate, Date toDate,Integer pageNo,Integer pageSize) {
-        Specification<DeviceRenewalRequest> spec=Specification.where(null);
-
-        Pageable p=PageRequest.of(pageNo,pageSize);
-
-        if( search!=null && !search.isEmpty()){
-            spec=spec.and(DeviceRenewalRequestSpec.hasSearch(search));
-        }
-
-        if(fromDate!=null || toDate!=null){
-            System.out.println("Inside From Date to toDate");
-            spec=spec.and(DeviceRenewalRequestSpec.fromDateToDate(fromDate,toDate));
-        }
-
-        return  this.deviceRenewalRequestRepository.findAll(spec,p);
-    }
-
 
     private String generateRequestCode() {
 
