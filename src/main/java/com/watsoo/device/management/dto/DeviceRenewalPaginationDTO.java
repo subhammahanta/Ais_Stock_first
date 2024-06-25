@@ -1,5 +1,10 @@
 package com.watsoo.device.management.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
 public class DeviceRenewalPaginationDTO {
 
     private Integer pageNo;
@@ -8,9 +13,11 @@ public class DeviceRenewalPaginationDTO {
 
     private String search;
 
-    private String fromDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date fromDate;
 
-    private String toDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date toDate;
 
     public Integer getPageNo() {
         return pageNo;
@@ -36,19 +43,19 @@ public class DeviceRenewalPaginationDTO {
         this.search = search;
     }
 
-    public String getFromDate() {
+    public Date getFromDate() {
         return fromDate;
     }
 
-    public void setFromDate(String fromDate) {
+    public void setFromDate(Date fromDate) {
         this.fromDate = fromDate;
     }
 
-    public String getToDate() {
+    public Date getToDate() {
         return toDate;
     }
 
-    public void setToDate(String toDate) {
+    public void setToDate(Date toDate) {
         this.toDate = toDate;
     }
 }

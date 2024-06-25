@@ -1,12 +1,19 @@
 package com.watsoo.device.management.service;
 
-import com.watsoo.device.management.dto.DeviceRenewalRequestDTO;
-import com.watsoo.device.management.dto.DeviceRenewalResponseDTO;
-import com.watsoo.device.management.dto.Response;
+import com.watsoo.device.management.dto.*;
+import com.watsoo.device.management.model.DeviceRenewalRequest;
+import org.springframework.data.domain.Page;
+
+import java.util.Date;
+import java.util.List;
 
 public interface DeviceRenewalRequestService {
 
     Response<?> saveDeviceRenewalRequest(DeviceRenewalRequestDTO deviceRenewalRequestDTO);
 
-    Response<?> getRenewalDevices(Integer pageNo,Integer pageSize,String search,String fromDate,String toDate);
+
+
+    PaginationV2<?> findByCriteria(String search, Date fromDate, Date toDate, Integer pageNo, Integer pageSize);
+
+    PaginationV2<?> getAllRenewalDeviceByRequestCode(String reqCode);
 }

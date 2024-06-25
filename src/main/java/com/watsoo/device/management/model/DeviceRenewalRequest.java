@@ -16,16 +16,6 @@ public class DeviceRenewalRequest {
     @Column(name = "req_code")
     private String reqCode;
 
-    @Override
-    public String toString() {
-        return "DeviceRenewalRequest{" +
-                "id=" + id +
-                ", reqCode='" + reqCode + '\'' +
-                ", createdAt=" + createdAt +
-                ", createdBy=" + createdBy +
-                ", renewalDevices=" + renewalDevices +
-                '}';
-    }
 
     @Column(name = "created_at")
     private Date createdAt;
@@ -35,15 +25,9 @@ public class DeviceRenewalRequest {
 
 
     @OneToMany(mappedBy = "deviceRenewalRequest")
+
     private List<RenewalDevice> renewalDevices;
 
-    public List<RenewalDevice> getRenewalDevices() {
-        return renewalDevices;
-    }
-
-    public void setRenewalDevices(List<RenewalDevice> renewalDevices) {
-        this.renewalDevices = renewalDevices;
-    }
 
     public Long getId() {
         return id;
@@ -76,5 +60,22 @@ public class DeviceRenewalRequest {
     public void setCreatedBy(Long createdBy) {
         this.createdBy = createdBy;
     }
+    public List<RenewalDevice> getRenewalDevices() {
+        return renewalDevices;
+    }
 
+    public void setRenewalDevices(List<RenewalDevice> renewalDevices) {
+        this.renewalDevices = renewalDevices;
+    }
+
+    @Override
+    public String toString() {
+        return "DeviceRenewalRequest{" +
+                "id=" + id +
+                ", reqCode='" + reqCode + '\'' +
+                ", createdAt=" + createdAt +
+                ", createdBy=" + createdBy +
+                ", renewalDevices=" + renewalDevices +
+                '}';
+    }
 }

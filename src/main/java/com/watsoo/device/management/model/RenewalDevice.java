@@ -111,4 +111,6 @@ public class RenewalDevice {
     public void setNewExpiryDate(Date newExpiryDate) {
         this.newExpiryDate = newExpiryDate;
     }
+
+
 }
