@@ -52,7 +52,7 @@ public class DeviceCommandRequestServiceImpl implements DeviceCommandRequestServ
 
 	@Override
 	public Response<Object> commandRequest(DeviceCommandDTO deviceCommandDTO) {
-		Response<Object> response = new Response<>();
+		Response<Object> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		try {
 			if (deviceCommandDTO.getCommand() != null && deviceCommandDTO.getCommand() != ""
 					&& deviceCommandDTO.getCreatedBy() != null && deviceCommandDTO.getImeiList() != null
@@ -165,7 +165,7 @@ public class DeviceCommandRequestServiceImpl implements DeviceCommandRequestServ
 
 	@Override
 	public Response<CommandRequestDTO> getCommandRequestById(CommandRequestDTO dto) {
-		Response<CommandRequestDTO> response = new Response<>();
+		Response<CommandRequestDTO> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		if (dto.getId() != null && dto.getId() > 0) {
 			CommandRequestDTO commandRequestResponse = getCommandRequestResponseById(dto);
 			response.setData(commandRequestResponse);
@@ -240,7 +240,7 @@ public class DeviceCommandRequestServiceImpl implements DeviceCommandRequestServ
 
 	@Override
 	public Response<?> revertCommandRequest(DeviceCommandDTO dto) {
-		Response<String> response = new Response<>();
+		Response<String> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		if (dto.getRequestId() != null && dto.getRequestId() > 0
 				&& (dto.getAction().equals(ActionEnum.CANCEL) || dto.getAction().equals(ActionEnum.REVERT))) {
 			// get request and update

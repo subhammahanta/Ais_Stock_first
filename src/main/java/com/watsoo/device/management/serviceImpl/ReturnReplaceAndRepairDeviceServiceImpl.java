@@ -29,7 +29,6 @@ import com.watsoo.device.management.model.BoxDevice;
 import com.watsoo.device.management.model.Client;
 import com.watsoo.device.management.model.Device;
 import com.watsoo.device.management.model.IssuedList;
-import com.watsoo.device.management.model.ModelConfig;
 import com.watsoo.device.management.model.ReturnReplaceRepair;
 import com.watsoo.device.management.repository.BoxDeviceRepository;
 import com.watsoo.device.management.repository.BoxRepository;
@@ -323,7 +322,7 @@ public class ReturnReplaceAndRepairDeviceServiceImpl implements ReturnReplaceAnd
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new Response<>();
+		return new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 	}
 
 	@Override

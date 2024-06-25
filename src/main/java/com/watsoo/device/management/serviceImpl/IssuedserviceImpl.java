@@ -40,11 +40,8 @@ import com.watsoo.device.management.model.Box;
 import com.watsoo.device.management.model.BoxDevice;
 import com.watsoo.device.management.model.Client;
 import com.watsoo.device.management.model.Device;
-import com.watsoo.device.management.model.DeviceLite;
 import com.watsoo.device.management.model.IssuedList;
-import com.watsoo.device.management.model.ReturnDevice;
 import com.watsoo.device.management.model.State;
-import com.watsoo.device.management.model.User;
 import com.watsoo.device.management.repository.BoxDeviceRepository;
 import com.watsoo.device.management.repository.BoxRepository;
 import com.watsoo.device.management.repository.ClientRepository;
@@ -128,7 +125,7 @@ public class IssuedserviceImpl implements IssuedService {
 
 	@Override
 	public Response<?> saveIssueDeviceDetails(IssueDeviceDTO dto) {
-		Response<Object> response = new Response<>();
+		Response<Object> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		IssuedList issuedList = new IssuedList();
 		if (dto.getClientId() != null && dto.getClientId() > 0 && dto.getBoxs() != null && dto.getBoxs().size() > 0
 				&& dto.getStateId() != null && dto.getStateId() > 0) {
@@ -363,7 +360,7 @@ public class IssuedserviceImpl implements IssuedService {
 
 	@Override
 	public Response<?> saveIssueDeviceDetailsV2(IssueDeviceDTO dto) {
-		Response<Object> response = new Response<>();
+		Response<Object> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		IssuedList issuedList = new IssuedList();
 		if (dto.getClientId() != null && dto.getClientId() > 0 && dto.getBoxs() != null && dto.getBoxs().size() > 0
 				&& dto.getStateId() != null && dto.getStateId() > 0) {

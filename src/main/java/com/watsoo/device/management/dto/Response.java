@@ -2,6 +2,7 @@ package com.watsoo.device.management.dto;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -15,7 +16,17 @@ public class Response<T> {
 	private int responseCode;
 	private String message;
 	private String requestedURI;
+	private String requestCode;
 	private T data;
+
+
+	public String getRequestCode() {
+		return requestCode;
+	}
+
+	public void setRequestCode(String requestCode) {
+		this.requestCode = requestCode;
+	}
 
 	public int getResponseCode() {
 		return responseCode;
@@ -49,7 +60,7 @@ public class Response<T> {
 		this.requestedURI = requestedURI;
 	}
 
-	public Response() {
+	public Response(HttpStatus notFound, String iccidNotFound) {
 		super();
 
 	}
@@ -67,4 +78,10 @@ public class Response<T> {
 		this.message = message;
 	}
 
+	public Response(int responseCode, T data, String message, String requestCode) {
+		this.responseCode = responseCode;
+		this.data = data;
+		this.message = message;
+		this.requestCode = requestCode;
+	}
 }

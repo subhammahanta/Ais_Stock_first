@@ -3,7 +3,6 @@ package com.watsoo.device.management.serviceImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -110,7 +109,7 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public Response<LoginResponse> login(LoginResponse loginDTO) {
-		Response<LoginResponse> response = new Response<>();
+		Response<LoginResponse> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		try {
 			Optional<CredentialMaster> credentialMasterOptional = credentialMstrRepo.findByEmail(loginDTO.getEmail());
 			if (credentialMasterOptional.isPresent()) {

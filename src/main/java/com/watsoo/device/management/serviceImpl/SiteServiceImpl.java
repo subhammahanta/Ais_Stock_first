@@ -180,7 +180,7 @@ public class SiteServiceImpl implements SiteService {
 			}
 			Map<Long, List<SiteDTO>> siteDtoMap = siteDtoList.stream().filter(x -> x != null && x.getUserId() != null)
 					.collect(Collectors.groupingBy(x -> x.getUserId()));
-			Response<?> resp = new Response<>();
+			Response<?> resp = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 			for (Map.Entry<Long, List<UserSiteRole>> userSite : userSiteMap.entrySet()) {
 				UserDTO userDto = new UserDTO();
 				userDto.setId(userSite.getKey());

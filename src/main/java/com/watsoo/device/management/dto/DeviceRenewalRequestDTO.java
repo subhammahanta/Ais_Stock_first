@@ -8,7 +8,7 @@ public class DeviceRenewalRequestDTO {
 
     private int userId;
 
-   private   List<DeviceRenewal> deviceRenewalList;
+    private   List<DeviceRenewal> deviceRenewalList;
 
     public long getUserId() {
         return userId;

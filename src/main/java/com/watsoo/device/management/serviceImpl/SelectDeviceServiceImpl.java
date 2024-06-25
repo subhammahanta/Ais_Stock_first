@@ -44,7 +44,7 @@ public class SelectDeviceServiceImpl implements SelectDeviceService {
 
    @Override
    public Response<?> saveData(IssueDeviceDTO issuedListDTO) {
-	   Response<Object> response = new Response<>();
+	   Response<Object> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		IssuedList issuedList = new IssuedList();
 		if (issuedListDTO.getClientId() != null && issuedListDTO.getClientId() > 0 && issuedListDTO.getBoxs() != null && issuedListDTO.getBoxs().size() > 0
 				&& issuedListDTO.getStateId() != null && issuedListDTO.getStateId() > 0) {

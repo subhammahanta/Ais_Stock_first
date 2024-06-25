@@ -34,7 +34,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 	@Override
 	public Response<?> checkDeviceAvailability(int requestedQuantity) {
 		List<BoxDTO> filteredBoxes = new ArrayList<>();
-		Response<Object> response = new Response<>();
+		Response<Object> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		Integer noOfDevices = 0;
 		if (requestedQuantity > 0) {
 			List<Box> boxes = boxRepository.findDevicePackedBoxes(StatusMaster.BOX_IN_STOCK.name());
@@ -105,7 +105,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 	@Override
 	public Response<?> checkDeviceAvailabilityV2(BoxRequestDTO boxRequestDTO) {
 		List<BoxDTO> filteredBoxes = new ArrayList<>();
-		Response<Object> response = new Response<>();
+		Response<Object> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		Integer noOfDevices = 0;
 		Integer requestedQuantity = boxRequestDTO.getRequestedQuantity();
 		if (boxRequestDTO.getBoxesList() != null && boxRequestDTO.getBoxesList() != "") {
@@ -291,7 +291,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 	@Override
 	public Response<?> checkDeviceAvailabilityV3(BoxRequestDTO boxRequestDTO) {
 		List<BoxDTO> filteredBoxes = new ArrayList<>();
-		Response<Object> response = new Response<>();
+		Response<Object> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		Integer noOfDevices = 0;
 		Integer requestedQuantity = boxRequestDTO.getRequestedQuantity();
 		if (boxRequestDTO.getBoxesList() != null && boxRequestDTO.getBoxesList() != "") {
@@ -507,7 +507,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 	@Override
 	public Response<?> checkDeviceAvailabilityV4(BoxRequestDTO boxRequestDTO) {
 		List<BoxDTO> filteredBoxes = new ArrayList<>();
-		Response<Object> response = new Response<>();
+		Response<Object> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		Integer noOfDevices = 0;
 		Integer requestedQuantity = boxRequestDTO.getRequestedQuantity();
 		if (boxRequestDTO.getBoxesList() != null && boxRequestDTO.getBoxesList() != "") {

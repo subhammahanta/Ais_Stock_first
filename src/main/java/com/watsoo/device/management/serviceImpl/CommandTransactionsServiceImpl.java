@@ -52,7 +52,7 @@ public class CommandTransactionsServiceImpl implements CommandTransactionsServic
 
 	@Override
 	public Response<String> shootCommand(DeviceCommandDTO deviceCommandDTO) {
-		Response<String> response = new Response<>();
+		Response<String> response = new Response<>(HttpStatus.NOT_FOUND, "ICCID not Found");
 		try {
 			if (!deviceCommandDTO.getImeiNo().isEmpty() && !deviceCommandDTO.getCommand().isEmpty()) {
 				String deviceResponse = httpUtility.httpGet(url1 + Constant.DEVICE_API, user1, password1);

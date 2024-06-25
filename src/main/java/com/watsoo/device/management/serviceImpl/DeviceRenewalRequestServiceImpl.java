@@ -1,6 +1,5 @@
 package com.watsoo.device.management.serviceImpl;
 
-import com.watsoo.device.management.Specifications.DeviceRenewalRequestSpec;
 import com.watsoo.device.management.dto.*;
 import com.watsoo.device.management.model.*;
 import com.watsoo.device.management.repository.*;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -66,13 +64,13 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
 
         //Saving the DeviceRenewalRequest into DB
-        DeviceRenewalRequest  savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
+//        DeviceRenewalRequest  savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
 
-
+        //Long requestId = savedDeviceRenewalObject.getId();
 
         List<DeviceRenewal> deviceRenewalsList = deviceRenewalRequestDTO.getDeviceRenewalList();
         List<DeviceRenewalSavedDataResponse> deviceRenewalSavedDataResponses=new ArrayList<>();
-//        List<DeviceRenewalSavedDataResponse> deviceRenewalUnSavedDataResponses=new ArrayList<>();
+        List<DeviceRenewalSavedDataResponse> deviceRenewalUnSavedDataResponses=new ArrayList<>();
 
        int deviceRenewalListSize=deviceRenewalsList.size();
 
@@ -106,6 +104,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     else{
                         renewalDevice.setNewExpiryDate(null);
                     }
+        DeviceRenewalRequest  savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
                     renewalDevice.setDeviceRenewalRequest(savedDeviceRenewalObject);
                RenewalDevice renewalDevice1=     renewalDeviceRepository.save(renewalDevice);
                     deviceRenewalSavedDataResponse.setNewExpiryDate(renewalDevice1.getNewExpiryDate());
@@ -115,8 +114,8 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     throw new RuntimeException(e);
                 }
             } else {
-                //For deleting the request Code Generated and saved into the DataBase because no ICCID was Found So Request Code should not be generated
-                deviceRenewalRequestRepository.delete(savedDeviceRenewalObject);
+                //Deleting
+                //this.deviceRenewalRequestRepository.delete(savedDeviceRenewalObject);
                 SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
                 Date date = null;
                 try {
@@ -136,10 +135,6 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
             }
 
         });
-<<<<<<< HEAD
-        return new Response<>(HttpStatus.CREATED.value(), "Request Created Successfully",renewalDevice);
-=======
-
 
         if(iccidNotFoundCount==0) {
             return new Response<>(HttpStatus.OK.value(), deviceRenewalSavedDataResponses, "Updated  Successfully", requestCode);
@@ -147,13 +142,13 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
 
         else if(iccidNotFoundCount==deviceRenewalListSize){
-            //System.out.println("**&(*&*&*&*&*&ICCIDNOTFOUNDCOUNT= "+iccidNotFoundCount);
+            System.out.println("**&(*&*&*&*&*&ICCIDNOTFOUNDCOUNT= "+iccidNotFoundCount);
 
             return new Response<>(HttpStatus.NOT_FOUND.value(), deviceRenewalSavedDataResponses, "No Such  ICCID's  FOUND", requestCode);
         }
 
         else if(iccidNotFoundCount>0){
-           // System.out.println("&^&^&^&^&^ICCIDNOTFOUNDCOUNT= "+iccidNotFoundCount);
+            System.out.println("&^&^&^&^&^ICCIDNOTFOUNDCOUNT= "+iccidNotFoundCount);
 
             return new Response<>(HttpStatus.OK.value(), deviceRenewalSavedDataResponses, "Updated Successfully with some unsucessful attempts (No such  Iccid Found)", requestCode);
 
@@ -164,8 +159,8 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
             return  null;
         }
 
->>>>>>> origin/main
     }
+
 
 
 

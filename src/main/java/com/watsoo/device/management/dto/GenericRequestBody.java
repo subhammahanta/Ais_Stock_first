@@ -174,6 +174,9 @@ public class GenericRequestBody {
 	
 	private String reConfigBoxCode;
 
+
+
+
 	public Long getMasterId() {
 		return masterId;
 	}

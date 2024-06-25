@@ -11,7 +11,7 @@ create table `device_renewal_request`(
   primary key (`id`)
 );
 
-drop table if exists `removal_device`;
+drop table if exists `renewal_device`;
 CREATE TABLE `renewal_device` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `device_id` int NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE `renewal_device` (
   `iccid_no` varchar(50) DEFAULT NULL,
   `old_expiry_date` date DEFAULT NULL,
   `new_expiry_date` date DEFAULT NULL,
-   `request_id` bigint(100) DEFAULT NULL,
+  `request_id` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `request_id` (`request_id`)
    );
