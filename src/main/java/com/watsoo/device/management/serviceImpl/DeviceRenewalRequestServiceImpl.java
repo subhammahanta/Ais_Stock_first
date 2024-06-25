@@ -1,22 +1,21 @@
 package com.watsoo.device.management.serviceImpl;
 
-import com.watsoo.device.management.dto.DeviceRenewal;
-import com.watsoo.device.management.dto.DeviceRenewalRequestDTO;
-import com.watsoo.device.management.dto.Response;
+import com.watsoo.device.management.Specifications.DeviceRenewalRequestSpec;
+import com.watsoo.device.management.dto.*;
 import com.watsoo.device.management.model.*;
 import com.watsoo.device.management.repository.*;
 import com.watsoo.device.management.service.DeviceRenewalRequestService;
-import com.watsoo.device.management.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestService {
@@ -37,11 +36,17 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
     private static RenewalDevice renewalDevice;
 
+    private static DeviceRenewalSavedDataResponse deviceRenewalSavedDataResponse=null;
+
+
+        int iccidNotFoundCount=0;
+
     @Override
-    public Response<Object> saveDeviceRenewalRequest(DeviceRenewalRequestDTO deviceRenewalRequestDTO) {
+    public Response<?> saveDeviceRenewalRequest(DeviceRenewalRequestDTO deviceRenewalRequestDTO) {
 
         //To fetch total no of request code present in DB
         int total_request_code = deviceRenewalRequestRepository.countTotalItems();
+
 
         String requestCode = generateRequestCode();
 
@@ -63,43 +68,106 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
         //Saving the DeviceRenewalRequest into DB
         DeviceRenewalRequest  savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
 
-        Long requestId = savedDeviceRenewalObject.getId();
-        List<DeviceRenewal> deviceRenewalsList = deviceRenewalRequestDTO.getDeviceRenewalList();
 
+
+        List<DeviceRenewal> deviceRenewalsList = deviceRenewalRequestDTO.getDeviceRenewalList();
+        List<DeviceRenewalSavedDataResponse> deviceRenewalSavedDataResponses=new ArrayList<>();
+//        List<DeviceRenewalSavedDataResponse> deviceRenewalUnSavedDataResponses=new ArrayList<>();
+
+       int deviceRenewalListSize=deviceRenewalsList.size();
+
+        this.iccidNotFoundCount=0;
         deviceRenewalsList.stream().forEach(item -> {
 
             String iccidNo = item.getIccidNo();
+
+            deviceRenewalSavedDataResponse=new DeviceRenewalSavedDataResponse();
 
             Optional<Device> deviceOptional = deviceRepository.findByIccidNo(iccidNo);
 
              renewalDevice = new RenewalDevice();
 
             if (deviceOptional.isPresent()) {
+
                 Device device = deviceOptional.get();
                 renewalDevice.setDeviceId(device.getId());
                 renewalDevice.setImeiNo(device.getImeiNo());
                 renewalDevice.setIccidNo(device.getIccidNo());
                 renewalDevice.setOldExpiryDate(device.getSim2ExpiryDate());
 
+                deviceRenewalSavedDataResponse.setIccidNo(device.getIccidNo());
                 SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
                 try {
+                    if(item.getDate()!=null){
                     Date date = inputFormat.parse(item.getDate());
                     renewalDevice.setNewExpiryDate(date);
-                    renewalDevice.setRequestId(requestId);
-                    renewalDeviceRepository.save(renewalDevice);
 
+                    }
+                    else{
+                        renewalDevice.setNewExpiryDate(null);
+                    }
+                    renewalDevice.setDeviceRenewalRequest(savedDeviceRenewalObject);
+               RenewalDevice renewalDevice1=     renewalDeviceRepository.save(renewalDevice);
+                    deviceRenewalSavedDataResponse.setNewExpiryDate(renewalDevice1.getNewExpiryDate());
+                    deviceRenewalSavedDataResponse.setUpdated(true);
+                    deviceRenewalSavedDataResponses.add(deviceRenewalSavedDataResponse);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
             } else {
+                //For deleting the request Code Generated and saved into the DataBase because no ICCID was Found So Request Code should not be generated
+                deviceRenewalRequestRepository.delete(savedDeviceRenewalObject);
+                SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                Date date = null;
+                try {
+                    date = inputFormat.parse(item.getDate());
+                deviceRenewalSavedDataResponse.setNewExpiryDate(date);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                    deviceRenewalSavedDataResponse.setUpdated(false);
+                    deviceRenewalSavedDataResponse.setIccidNo(iccidNo);
 
-              throw  new RuntimeException("IICID Not Found");
+                    deviceRenewalSavedDataResponses.add(deviceRenewalSavedDataResponse);
+
+                 iccidNotFoundCount=iccidNotFoundCount+1;
+             //throw new ResourceNotFoundException("ICCID not found");
 
             }
 
         });
+<<<<<<< HEAD
         return new Response<>(HttpStatus.CREATED.value(), "Request Created Successfully",renewalDevice);
+=======
+
+
+        if(iccidNotFoundCount==0) {
+            return new Response<>(HttpStatus.OK.value(), deviceRenewalSavedDataResponses, "Updated  Successfully", requestCode);
+        }
+
+
+        else if(iccidNotFoundCount==deviceRenewalListSize){
+            //System.out.println("**&(*&*&*&*&*&ICCIDNOTFOUNDCOUNT= "+iccidNotFoundCount);
+
+            return new Response<>(HttpStatus.NOT_FOUND.value(), deviceRenewalSavedDataResponses, "No Such  ICCID's  FOUND", requestCode);
+        }
+
+        else if(iccidNotFoundCount>0){
+           // System.out.println("&^&^&^&^&^ICCIDNOTFOUNDCOUNT= "+iccidNotFoundCount);
+
+            return new Response<>(HttpStatus.OK.value(), deviceRenewalSavedDataResponses, "Updated Successfully with some unsucessful attempts (No such  Iccid Found)", requestCode);
+
+        }
+
+
+        else{
+            return  null;
+        }
+
+>>>>>>> origin/main
     }
+
+
 
     private String generateRequestCode() {
 
@@ -109,7 +177,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
         return  uniqueRequestCode;
     }
 
-  
+
 
 
 }

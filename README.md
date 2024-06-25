@@ -12,7 +12,7 @@ create table `device_renewal_request`(
 );
 
 drop table if exists `removal_device`;
-CREATE TABLE `removal_device` (
+CREATE TABLE `renewal_device` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `device_id` int NOT NULL,
   `imei_no` varchar(50) DEFAULT NULL,
