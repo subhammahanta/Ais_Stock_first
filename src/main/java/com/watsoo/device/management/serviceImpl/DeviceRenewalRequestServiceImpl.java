@@ -64,9 +64,9 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
 
         //Saving the DeviceRenewalRequest into DB
-        DeviceRenewalRequest  savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
+//        DeviceRenewalRequest  savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
 
-        Long requestId = savedDeviceRenewalObject.getId();
+        //Long requestId = savedDeviceRenewalObject.getId();
 
         List<DeviceRenewal> deviceRenewalsList = deviceRenewalRequestDTO.getDeviceRenewalList();
         List<DeviceRenewalSavedDataResponse> deviceRenewalSavedDataResponses=new ArrayList<>();
@@ -104,6 +104,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     else{
                         renewalDevice.setNewExpiryDate(null);
                     }
+        DeviceRenewalRequest  savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
                     renewalDevice.setDeviceRenewalRequest(savedDeviceRenewalObject);
                RenewalDevice renewalDevice1=     renewalDeviceRepository.save(renewalDevice);
                     deviceRenewalSavedDataResponse.setNewExpiryDate(renewalDevice1.getNewExpiryDate());
@@ -113,6 +114,8 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     throw new RuntimeException(e);
                 }
             } else {
+                //Deleting
+                //this.deviceRenewalRequestRepository.delete(savedDeviceRenewalObject);
                 SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
                 Date date = null;
                 try {
@@ -158,34 +161,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
     }
 
-    @Override
-    public Response<?> getRenewalDevices(Integer pageNo, Integer pageSize,String search,String fromDate,String toDate) {
 
-        Pageable pageable= PageRequest.of(pageNo,pageSize);
-
-
-                Page<DeviceRenewalRequest> deviceRenewalRequests= deviceRenewalRequestRepository.getAllRenewalDevices(pageable);
-
-                List<DeviceRenewalRequest>res= deviceRenewalRequests.getContent();
-
-        System.out.println("Page Size = "+res.size());
-
-        res.stream().forEach(System.out::print);
-
-//                  res.stream().filter(item->{
-//
-//                  }).filter(item->{
-//                        item.getReqCode()==null || item.getReqCode()
-//                  }).filter(item->{
-//
-//                  }).filter(item->{
-//
-//                  })
-
-
-
-        return null;
-    }
 
 
     private String generateRequestCode() {

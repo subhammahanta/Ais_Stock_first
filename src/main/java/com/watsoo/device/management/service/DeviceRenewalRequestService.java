@@ -8,5 +8,5 @@ public interface DeviceRenewalRequestService {
 
     Response<?> saveDeviceRenewalRequest(DeviceRenewalRequestDTO deviceRenewalRequestDTO);
 
-    Response<?> getRenewalDevices(Integer pageNo,Integer pageSize,String search,String fromDate,String toDate);
+
 }

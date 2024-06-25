@@ -23,16 +23,6 @@ public class DeviceRenewalController {
         return  response;
     }
 
-    @GetMapping ("/get/All/device_renewal_request")
-    public Response<?> getDeviceRenewalData(@RequestBody DeviceRenewalPaginationDTO deviceRenewalPaginationDTO){
-
-
-
-         Response<?> response= deviceRenewalRequestService.getRenewalDevices(deviceRenewalPaginationDTO.getPageNo(),deviceRenewalPaginationDTO.getPageSize(),deviceRenewalPaginationDTO.getSearch(),deviceRenewalPaginationDTO.getFromDate(),deviceRenewalPaginationDTO.getToDate());
-
-
-        return  response;
-    }
 
 
 }
