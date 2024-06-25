@@ -159,7 +159,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
     }
 
     @Override
-    public Response<?> getRenewalDevices(Integer pageNo, Integer pageSize) {
+    public Response<?> getRenewalDevices(Integer pageNo, Integer pageSize,String search,String fromDate,String toDate) {
 
         Pageable pageable= PageRequest.of(pageNo,pageSize);
 
@@ -170,7 +170,17 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
         System.out.println("Page Size = "+res.size());
 
-                  res.stream().forEach(System.out::println);
+        res.stream().forEach(System.out::print);
+
+//                  res.stream().filter(item->{
+//
+//                  }).filter(item->{
+//                        item.getReqCode()==null || item.getReqCode()
+//                  }).filter(item->{
+//
+//                  }).filter(item->{
+//
+//                  })
 
 
 

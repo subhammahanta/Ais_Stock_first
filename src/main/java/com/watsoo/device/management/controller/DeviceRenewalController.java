@@ -1,9 +1,6 @@
 package com.watsoo.device.management.controller;
-import com.watsoo.device.management.dto.DeviceRenewalRequestDTO;
-import com.watsoo.device.management.dto.DeviceRenewalResponseDTO;
+import com.watsoo.device.management.dto.*;
 
-import com.watsoo.device.management.dto.GenericRequestBody;
-import com.watsoo.device.management.dto.Response;
 import com.watsoo.device.management.service.DeviceRenewalRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,11 +24,11 @@ public class DeviceRenewalController {
     }
 
     @GetMapping ("/get/All/device_renewal_request")
-    public Response<?> getDeviceRenewalData(@RequestBody GenericRequestBody genericRequestBody){
+    public Response<?> getDeviceRenewalData(@RequestBody DeviceRenewalPaginationDTO deviceRenewalPaginationDTO){
 
 
 
-         Response<?> response= deviceRenewalRequestService.getRenewalDevices(genericRequestBody.getPageNo(),genericRequestBody.getPageSize());
+         Response<?> response= deviceRenewalRequestService.getRenewalDevices(deviceRenewalPaginationDTO.getPageNo(),deviceRenewalPaginationDTO.getPageSize(),deviceRenewalPaginationDTO.getSearch(),deviceRenewalPaginationDTO.getFromDate(),deviceRenewalPaginationDTO.getToDate());
 
 
         return  response;
