@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -157,14 +158,15 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
     public PaginationV2<?> findByCriteria(String search, Date fromDate, Date toDate, Integer pageNo, Integer pageSize) {
         Specification<DeviceRenewalRequest> spec=Specification.where(null);
 
-        Pageable p=PageRequest.of(pageNo,pageSize);
+        Pageable p = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+
 
         if( search!=null && !search.isEmpty()){
             spec=spec.and(DeviceRenewalRequestSpec.hasSearch(search));
         }
 
         if(fromDate!=null || toDate!=null){
-            System.out.println("Inside From Date to toDate");
+
             spec=spec.and(DeviceRenewalRequestSpec.fromDateToDate(fromDate,toDate));
         }
 
