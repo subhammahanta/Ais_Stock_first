@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 @Service
 public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestService {
@@ -89,6 +91,8 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
                 deviceRenewalSavedDataResponse.setIccidNo(device.getIccidNo());
                 SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+
                 try {
                     if(item.getDate()!=null){
                     Date date = inputFormat.parse(item.getDate());
