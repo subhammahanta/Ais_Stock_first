@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface DeviceRenewalRequestRepository extends JpaRepository<DeviceRenewalRequest,Long>, JpaSpecificationExecutor<DeviceRenewalRequest> {
 
-    @Query(value = "SELECT COUNT(*) FROM device_renewal_request", nativeQuery = true)
+    @Query(value = "SELECT COUNT(id) FROM device_renewal_request", nativeQuery = true)
     int countTotalItems();
 
 

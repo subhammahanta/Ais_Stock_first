@@ -44,12 +44,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
     @Override
     public Response<?> saveDeviceRenewalRequest(DeviceRenewalRequestDTO deviceRenewalRequestDTO) {
 
-        //To fetch total no of request code present in DB
-        int total_request_code = deviceRenewalRequestRepository.countTotalItems();
-
-
         String requestCode = generateRequestCode();
-
         Optional<User> user = userRepository.findById(deviceRenewalRequestDTO.getUserId());
 
         DeviceRenewalRequest deviceRenewalRequest = new DeviceRenewalRequest();
@@ -62,12 +57,6 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
         deviceRenewalRequest.setReqCode(requestCode);
         deviceRenewalRequest.setCreatedAt(new Date());
-
-
-
-        //Saving the DeviceRenewalRequest into DB
-        DeviceRenewalRequest  savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
-
 
 
         List<DeviceRenewal> deviceRenewalsList = deviceRenewalRequestDTO.getDeviceRenewalList();
@@ -106,6 +95,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     else{
                         renewalDevice.setNewExpiryDate(null);
                     }
+        DeviceRenewalRequest  savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
                     renewalDevice.setDeviceRenewalRequest(savedDeviceRenewalObject);
                RenewalDevice renewalDevice1=     renewalDeviceRepository.save(renewalDevice);
                     deviceRenewalSavedDataResponse.setNewExpiryDate(renewalDevice1.getNewExpiryDate());
@@ -115,8 +105,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     throw new RuntimeException(e);
                 }
             } else {
-                //For deleting the request Code Generated and saved into the DataBase because no ICCID was Found So Request Code should not be generated
-                deviceRenewalRequestRepository.delete(savedDeviceRenewalObject);
+
                 SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
                 Date date = null;
                 try {
@@ -185,8 +174,10 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
         List<RequestRenewalDeviceResponseDTO> requestRenewalDeviceResponseDTOS=new ArrayList<>();
 
+        int totalItemsinDB=this.deviceRenewalRequestRepository.countTotalItems();
 
   PaginationV2<List<RequestRenewalDeviceResponseDTO>> requestRenewalDeviceResponseDTOPaginationV2=new PaginationV2<>(pageNo,0,deviceRenewalRequestList.size(),pageSize,requestRenewalDeviceResponseDTOS);
+      requestRenewalDeviceResponseDTOPaginationV2.setTotalItems(totalItemsinDB);
 
   for(DeviceRenewalRequest items:deviceRenewalRequestList){
 
@@ -198,6 +189,11 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
       requestRenewalDeviceResponseDTO.setDetails(new ArrayList<>());
       requestRenewalDeviceResponseDTOS.add(requestRenewalDeviceResponseDTO);
   }
+
+    if(fromDate!=null || toDate!=null || search.length()>0 ){
+      requestRenewalDeviceResponseDTOPaginationV2.setTotalItems(deviceRenewalRequestList.size());
+
+    }
         requestRenewalDeviceResponseDTOPaginationV2.setItems(requestRenewalDeviceResponseDTOS);
 
          return  requestRenewalDeviceResponseDTOPaginationV2;

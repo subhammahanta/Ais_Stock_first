@@ -46,8 +46,8 @@ public class DeviceRenewalController {
         return new ResponseEntity<>(data,HttpStatus.OK);
     }
 
-    @GetMapping("/get/All/device_renewal_request/{reqCode}")
-  ResponseEntity<?>   getAllRenewalDeviceData(@PathVariable("reqCode")String reqCode){
+    @PostMapping("/get/one/device_renewal_request/{reqCode}")
+  ResponseEntity<?>   getAllRenewalDeviceData(@PathVariable("reqCode")String reqCode,@RequestParam (value = "pageNo",required = false)Integer pageNo,@RequestParam(value = "pageSize",required = false)Integer pageSize){
 
          PaginationV2<?> paginationV2=   this.deviceRenewalRequestService.getAllRenewalDeviceByRequestCode(reqCode);
             return new ResponseEntity<>(paginationV2,HttpStatus.OK);
