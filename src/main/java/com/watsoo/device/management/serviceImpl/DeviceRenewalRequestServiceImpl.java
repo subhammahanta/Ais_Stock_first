@@ -73,7 +73,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
         }
 
         deviceRenewalRequest.setReqCode(requestCode);
-        deviceRenewalRequest.setCreatedAt(new Date());
+        deviceRenewalRequest.setCreatedAt(new Date(System.currentTimeMillis()));
 
 
         //Saving the DeviceRenewalRequest into DB
