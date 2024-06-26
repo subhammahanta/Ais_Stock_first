@@ -31,7 +31,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
     private static DeviceRenewalSavedDataResponse deviceRenewalSavedDataResponse=null;
 
 
-    int iccidNotFoundCount=0;
+        int iccidNotFoundCount=0;
 
     @Override
     public Response<?> saveDeviceRenewalRequest(DeviceRenewalRequestDTO deviceRenewalRequestDTO) {
@@ -98,7 +98,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     else{
                         renewalDevice.setNewExpiryDate(null);
                     }
-                DeviceRenewalRequest  savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
+        DeviceRenewalRequest  savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
                     renewalDevice.setDeviceRenewalRequest(savedDeviceRenewalObject);
                RenewalDevice renewalDevice1=     renewalDeviceRepository.save(renewalDevice);
                     deviceRenewalSavedDataResponse.setNewExpiryDate(renewalDevice1.getNewExpiryDate());
@@ -148,6 +148,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
         }
 
+
         else{
             return  null;
         }
@@ -165,4 +166,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
         return  uniqueRequestCode;
     }
 
+
+
+//This is surya.....
 }
