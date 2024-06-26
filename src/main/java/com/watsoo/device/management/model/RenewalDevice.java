@@ -16,8 +16,8 @@ public class RenewalDevice {
 
 
 
-    @ManyToOne
-    @JoinColumn(name = "request_id")
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "request_id", referencedColumnName = "id")
     private DeviceRenewalRequest deviceRenewalRequest;
 
     public RenewalDevice() {

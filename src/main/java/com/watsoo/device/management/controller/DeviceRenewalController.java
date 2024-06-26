@@ -39,7 +39,7 @@ public class DeviceRenewalController {
 
         PaginationV2<?> renewalRequest = this.deviceRenewalRequestService.getDeviceRenewalRequest(reqCode,genericRequestBody.getPageNo(),genericRequestBody.getPageSize());
 
-        return new ResponseEntity<>(renewalRequest,HttpStatus.OK);
+        return ResponseEntity.ok(renewalRequest);
     }
 
 }
