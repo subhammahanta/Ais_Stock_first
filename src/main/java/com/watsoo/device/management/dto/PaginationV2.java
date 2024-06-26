@@ -7,6 +7,9 @@ public class PaginationV2<T> {
     private int pageSize;
     private T items;
 
+    public PaginationV2() {
+    }
+
     public PaginationV2(int currentPage, int totalPages, long totalItems, int pageSize, T items) {
         this.currentPage = currentPage;
         this.totalPages = totalPages;

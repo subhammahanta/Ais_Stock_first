@@ -1,6 +1,5 @@
 package com.watsoo.device.management.repository;
 
-import com.watsoo.device.management.dto.DeviceRenewalResponseDTO;
 import com.watsoo.device.management.model.DeviceRenewalRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DeviceRenewalRequestRepository extends JpaRepository<DeviceRenewalRequest,Long> {
@@ -27,5 +26,19 @@ public interface DeviceRenewalRequestRepository extends JpaRepository<DeviceRene
 
     @Query(value = "SELECT * FROM device_renewal_request  INNER JOIN renewal_device  ON device_renewal_request.id = renewal_device.request_id",nativeQuery = true)
        Page<DeviceRenewalRequest> getAllRenewalDevices(Pageable pageable);
+
+
+    @Query(value = "select * from device_renewal_request order by created_at desc",nativeQuery = true)
+    Page<DeviceRenewalRequest> findAll(Pageable pageable);
+
+    @Query(value="select * from device_renewal_request req where req_code like :reqCode",nativeQuery = true)
+    Page<DeviceRenewalRequest> findByReqCode(@Param("reqCode") String reqCode, Pageable pageable);
+
+
+    @Query(value="select * from device_renewal_request req where req_code = :reqCode",nativeQuery = true)
+    Optional<DeviceRenewalRequest> findByReqCode(String reqCode);
+
+    @Query(value = "select * from device_renewal_request where  (DATE(created_at) = :fromDate or  DATE(created_at) =:toDate) or Date(created_at) between :fromDate and :toDate",nativeQuery = true)
+    Page<DeviceRenewalRequest> findAllCreatedAtBetween(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate, Pageable pageable);
 
 }
