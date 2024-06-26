@@ -23,7 +23,6 @@ public class DeviceRenewalRequest {
                 ", reqCode='" + reqCode + '\'' +
                 ", createdAt=" + createdAt +
                 ", createdBy=" + createdBy +
-                ", renewalDevices=" + renewalDevices +
                 '}';
     }
 
@@ -34,16 +33,6 @@ public class DeviceRenewalRequest {
     private Long createdBy;
 
 
-    @OneToMany(mappedBy = "deviceRenewalRequest")
-    private List<RenewalDevice> renewalDevices;
-
-    public List<RenewalDevice> getRenewalDevices() {
-        return renewalDevices;
-    }
-
-    public void setRenewalDevices(List<RenewalDevice> renewalDevices) {
-        this.renewalDevices = renewalDevices;
-    }
 
     public Long getId() {
         return id;
