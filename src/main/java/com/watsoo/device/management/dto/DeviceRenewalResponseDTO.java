@@ -1,47 +1,55 @@
 package com.watsoo.device.management.dto;
 
+import com.watsoo.device.management.model.RenewalDevice;
+
 import java.util.Date;
 import java.util.List;
 
 public class DeviceRenewalResponseDTO {
 
-    private String reqCode;
+    private String requestCode;
+    private Date requestDate;
+    private String createdBy;
+    private int totalDevices;
+    private List<RenewalDevice> devices;
 
-    private Long deviceId;
-
-    private String imeiNo;
-
-    private String iccidNo;
-
-    public String getReqCode() {
-        return reqCode;
+    public String getRequestCode() {
+        return requestCode;
     }
 
-    public void setReqCode(String reqCode) {
-        this.reqCode = reqCode;
+    public void setRequestCode(String requestCode) {
+        this.requestCode = requestCode;
     }
 
-    public Long getDeviceId() {
-        return deviceId;
+    public Date getRequestDate() {
+        return requestDate;
     }
 
-    public void setDeviceId(Long deviceId) {
-        this.deviceId = deviceId;
+    public void setRequestDate(Date requestDate) {
+        this.requestDate = requestDate;
     }
 
-    public String getImeiNo() {
-        return imeiNo;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setImeiNo(String imeiNo) {
-        this.imeiNo = imeiNo;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public String getIccidNo() {
-        return iccidNo;
+    public List<RenewalDevice> getDevices() {
+        return devices;
     }
 
-    public void setIccidNo(String iccidNo) {
-        this.iccidNo = iccidNo;
+    public void setDevices(List<RenewalDevice> devices) {
+        this.devices = devices;
+    }
+
+    public int getTotalDevices() {
+        return totalDevices;
+    }
+
+    public void setTotalDevices(int totalDevices) {
+        this.totalDevices = totalDevices;
     }
 }
