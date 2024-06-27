@@ -19,4 +19,6 @@ public interface RenewalDeviceRepository extends JpaRepository<RenewalDevice,Lon
     @Query(value = "select count(*) from renewal_device where request_id = :requestId",nativeQuery = true)
     Integer deviceCountForRequest(@Param("requestId")Long requestId);
 
+    Page<RenewalDevice> findAllByImeiNo(@Param("imeiNO")String imeiNo,Pageable pageable);
+
 }

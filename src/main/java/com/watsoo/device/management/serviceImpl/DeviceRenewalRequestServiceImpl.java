@@ -193,8 +193,45 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
         if (genericRequestBody.getSearch() != null && !genericRequestBody.getSearch().isEmpty() && !genericRequestBody.getSearch().equals("")) {
 
-            deviceRenewalRequestsPaging = this.deviceRenewalRequestRepository.findByReqCode(genericRequestBody.getSearch(), pageRequest);
+            if(genericRequestBody.getSearch().matches("^[0-9]+")){
+                Page<RenewalDevice> collect = this.renewalDeviceRepository
+                        .findAllByImeiNo(genericRequestBody.getSearch(),pageRequest);
 
+                List<DeviceRenewalResponseDTO> allById =
+                        collect
+                                .stream()
+                                .map(renew ->
+                                {
+                                    if (renew.getDeviceRenewalRequest().getReqCode() != null && !renew.getDeviceRenewalRequest().getReqCode().equals("")) {
+                                        Optional<DeviceRenewalRequest> byId = this.deviceRenewalRequestRepository.findByReqCode(renew.getDeviceRenewalRequest().getReqCode());
+
+                                        logger.info("Data : "+ byId.get().getId() +" "+byId.get().getReqCode()+" "+byId.get().getCreatedBy()+" "+byId.get().getCreatedAt());
+                                        if (byId.isPresent()) {
+                                            Optional<User> user = this.userRepository.findById(byId.get().getCreatedBy());
+                                            if(user.isPresent()){
+                                                DeviceRenewalResponseDTO deviceRenewalResponse = new DeviceRenewalResponseDTO();
+                                                deviceRenewalResponse.setRequestCode(byId.get().getReqCode());
+                                                deviceRenewalResponse.setRequestDate(byId.get().getCreatedAt());
+                                                deviceRenewalResponse.setCreatedBy(user.get().getName());
+                                                deviceRenewalResponse.setDevices(new ArrayList<>());
+                                                deviceRenewalResponse.setTotalDevices(this.renewalDeviceRepository.deviceCountForRequest(byId.get().getId()));
+                                                return deviceRenewalResponse;
+                                            }
+                                        }
+                                    }
+                                    return  null;
+                                })
+                                .collect(Collectors.toList());
+
+
+                paginationV2.setPageSize(genericRequestBody.getPageSize());
+                paginationV2.setTotalItems(collect.getTotalElements());
+                paginationV2.setItems(allById);
+
+                return paginationV2;
+            }else{
+                deviceRenewalRequestsPaging = this.deviceRenewalRequestRepository.findByReqCode(genericRequestBody.getSearch(), pageRequest);
+            }
         } else if (genericRequestBody.getFromDate() == 0 && genericRequestBody.getToDate() == 0
                 && genericRequestBody.getSearch().equals("") && genericRequestBody.getSearch().isEmpty()) {
 
