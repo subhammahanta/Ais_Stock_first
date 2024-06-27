@@ -3,7 +3,7 @@
 
 drop table if exists `device_renewal_request`;
 create table `device_renewal_request`(
-  `id`  bigint ,
+  `id`  bigint auto_increment,
   `req_code`varchar(255) default null,
   `created_at` datetime default null,
   `created_by` bigint default null,
