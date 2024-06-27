@@ -3,10 +3,7 @@ package com.watsoo.device.management.serviceImpl;
 import com.watsoo.device.management.constant.Constant;
 import com.watsoo.device.management.dto.*;
 import com.watsoo.device.management.exception.ResourceNotFoundException;
-import com.watsoo.device.management.model.Device;
-import com.watsoo.device.management.model.DeviceRenewalRequest;
-import com.watsoo.device.management.model.RenewalDevice;
-import com.watsoo.device.management.model.User;
+import com.watsoo.device.management.model.*;
 import com.watsoo.device.management.repository.*;
 import com.watsoo.device.management.service.DeviceRenewalRequestService;
 import org.slf4j.Logger;
@@ -50,6 +47,8 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
     private static DeviceRenewalSavedDataResponse deviceRenewalSavedDataResponse = null;
 
+    @Autowired
+    private DeviceLazyRepository deviceLazyRepository;
 
     int iccidNotFoundCount = 0;
 
@@ -73,7 +72,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
         }
 
         deviceRenewalRequest.setReqCode(requestCode);
-        deviceRenewalRequest.setCreatedAt(new Date(System.currentTimeMillis()));
+        deviceRenewalRequest.setCreatedAt(new Date());
 
 
         //Saving the DeviceRenewalRequest into DB
@@ -83,7 +82,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
         List<DeviceRenewal> deviceRenewalsList = deviceRenewalRequestDTO.getDeviceRenewalList();
         List<DeviceRenewalSavedDataResponse> deviceRenewalSavedDataResponses = new ArrayList<>();
-        List<DeviceRenewalSavedDataResponse> deviceRenewalUnSavedDataResponses = new ArrayList<>();
+//        List<DeviceRenewalSavedDataResponse> deviceRenewalUnSavedDataResponses = new ArrayList<>();
 
         int deviceRenewalListSize = deviceRenewalsList.size();
 
@@ -114,6 +113,14 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     if (item.getDate() != null) {
                         Date date = inputFormat.parse(item.getDate());
                         renewalDevice.setNewExpiryDate(date);
+                       Optional< DeviceLazyEntity> deviceLazyEntityOptional= this.deviceLazyRepository.findByIccidNo(device.getIccidNo());
+                           if(deviceLazyEntityOptional.isPresent()){
+                               DeviceLazyEntity deviceLazyEntity= deviceLazyEntityOptional.get();
+                               deviceLazyEntity.setSim1ExpiryDate(date);
+                               deviceLazyEntity.setSim2ExpiryDate(date);
+                               this.deviceLazyRepository.save(deviceLazyEntity);
+                           }
+
 
                     } else {
                         renewalDevice.setNewExpiryDate(null);
@@ -121,6 +128,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     DeviceRenewalRequest savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
                     renewalDevice.setDeviceRenewalRequest(savedDeviceRenewalObject);
                     RenewalDevice renewalDevice1 = renewalDeviceRepository.save(renewalDevice);
+
                     deviceRenewalSavedDataResponse.setNewExpiryDate(renewalDevice1.getNewExpiryDate());
                     deviceRenewalSavedDataResponse.setUpdated(true);
                     deviceRenewalSavedDataResponses.add(deviceRenewalSavedDataResponse);
@@ -128,8 +136,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     throw new RuntimeException(e);
                 }
             } else {
-                //Deleting
-                //this.deviceRenewalRequestRepository.delete(savedDeviceRenewalObject);
+
                 SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
                 Date date = null;
                 try {
