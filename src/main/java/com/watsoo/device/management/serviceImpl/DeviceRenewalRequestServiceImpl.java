@@ -3,10 +3,7 @@ package com.watsoo.device.management.serviceImpl;
 import com.watsoo.device.management.constant.Constant;
 import com.watsoo.device.management.dto.*;
 import com.watsoo.device.management.exception.ResourceNotFoundException;
-import com.watsoo.device.management.model.Device;
-import com.watsoo.device.management.model.DeviceRenewalRequest;
-import com.watsoo.device.management.model.RenewalDevice;
-import com.watsoo.device.management.model.User;
+import com.watsoo.device.management.model.*;
 import com.watsoo.device.management.repository.*;
 import com.watsoo.device.management.service.DeviceRenewalRequestService;
 import org.slf4j.Logger;
@@ -21,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,6 +47,8 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
     private static DeviceRenewalSavedDataResponse deviceRenewalSavedDataResponse = null;
 
+    @Autowired
+    private DeviceLazyRepository deviceLazyRepository;
 
     int iccidNotFoundCount = 0;
 
@@ -81,7 +82,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
         List<DeviceRenewal> deviceRenewalsList = deviceRenewalRequestDTO.getDeviceRenewalList();
         List<DeviceRenewalSavedDataResponse> deviceRenewalSavedDataResponses = new ArrayList<>();
-        List<DeviceRenewalSavedDataResponse> deviceRenewalUnSavedDataResponses = new ArrayList<>();
+//        List<DeviceRenewalSavedDataResponse> deviceRenewalUnSavedDataResponses = new ArrayList<>();
 
         int deviceRenewalListSize = deviceRenewalsList.size();
 
@@ -106,10 +107,20 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
                 deviceRenewalSavedDataResponse.setIccidNo(device.getIccidNo());
                 SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+
                 try {
                     if (item.getDate() != null) {
                         Date date = inputFormat.parse(item.getDate());
                         renewalDevice.setNewExpiryDate(date);
+                       Optional< DeviceLazyEntity> deviceLazyEntityOptional= this.deviceLazyRepository.findByIccidNo(device.getIccidNo());
+                           if(deviceLazyEntityOptional.isPresent()){
+                               DeviceLazyEntity deviceLazyEntity= deviceLazyEntityOptional.get();
+                               deviceLazyEntity.setSim1ExpiryDate(date);
+                               deviceLazyEntity.setSim2ExpiryDate(date);
+                               this.deviceLazyRepository.save(deviceLazyEntity);
+                           }
+
 
                     } else {
                         renewalDevice.setNewExpiryDate(null);
@@ -117,6 +128,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     DeviceRenewalRequest savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
                     renewalDevice.setDeviceRenewalRequest(savedDeviceRenewalObject);
                     RenewalDevice renewalDevice1 = renewalDeviceRepository.save(renewalDevice);
+
                     deviceRenewalSavedDataResponse.setNewExpiryDate(renewalDevice1.getNewExpiryDate());
                     deviceRenewalSavedDataResponse.setUpdated(true);
                     deviceRenewalSavedDataResponses.add(deviceRenewalSavedDataResponse);
@@ -124,8 +136,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                     throw new RuntimeException(e);
                 }
             } else {
-                //Deleting
-                //this.deviceRenewalRequestRepository.delete(savedDeviceRenewalObject);
+
                 SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
                 Date date = null;
                 try {
@@ -182,8 +193,45 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
         if (genericRequestBody.getSearch() != null && !genericRequestBody.getSearch().isEmpty() && !genericRequestBody.getSearch().equals("")) {
 
-            deviceRenewalRequestsPaging = this.deviceRenewalRequestRepository.findByReqCode(genericRequestBody.getSearch(), pageRequest);
+            if(genericRequestBody.getSearch().matches("^[0-9]+")){
+                Page<RenewalDevice> collect = this.renewalDeviceRepository
+                        .findAllByImeiNo(genericRequestBody.getSearch(),pageRequest);
 
+                List<DeviceRenewalResponseDTO> allById =
+                        collect
+                                .stream()
+                                .map(renew ->
+                                {
+                                    if (renew.getDeviceRenewalRequest().getReqCode() != null && !renew.getDeviceRenewalRequest().getReqCode().equals("")) {
+                                        Optional<DeviceRenewalRequest> byId = this.deviceRenewalRequestRepository.findByReqCode(renew.getDeviceRenewalRequest().getReqCode());
+
+                                        logger.info("Data : "+ byId.get().getId() +" "+byId.get().getReqCode()+" "+byId.get().getCreatedBy()+" "+byId.get().getCreatedAt());
+                                        if (byId.isPresent()) {
+                                            Optional<User> user = this.userRepository.findById(byId.get().getCreatedBy());
+                                            if(user.isPresent()){
+                                                DeviceRenewalResponseDTO deviceRenewalResponse = new DeviceRenewalResponseDTO();
+                                                deviceRenewalResponse.setRequestCode(byId.get().getReqCode());
+                                                deviceRenewalResponse.setRequestDate(byId.get().getCreatedAt());
+                                                deviceRenewalResponse.setCreatedBy(user.get().getName());
+                                                deviceRenewalResponse.setDevices(new ArrayList<>());
+                                                deviceRenewalResponse.setTotalDevices(this.renewalDeviceRepository.deviceCountForRequest(byId.get().getId()));
+                                                return deviceRenewalResponse;
+                                            }
+                                        }
+                                    }
+                                    return  null;
+                                })
+                                .collect(Collectors.toList());
+
+
+                paginationV2.setPageSize(genericRequestBody.getPageSize());
+                paginationV2.setTotalItems(collect.getTotalElements());
+                paginationV2.setItems(allById);
+
+                return paginationV2;
+            }else{
+                deviceRenewalRequestsPaging = this.deviceRenewalRequestRepository.findByReqCode(genericRequestBody.getSearch(), pageRequest);
+            }
         } else if (genericRequestBody.getFromDate() == 0 && genericRequestBody.getToDate() == 0
                 && genericRequestBody.getSearch().equals("") && genericRequestBody.getSearch().isEmpty()) {
 
