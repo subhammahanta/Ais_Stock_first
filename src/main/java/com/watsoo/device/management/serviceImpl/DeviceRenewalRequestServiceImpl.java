@@ -52,6 +52,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
 
     int iccidNotFoundCount = 0;
 
+        Boolean incomingNewExpiryDateLessThanExistingExpiryDate=false;
     @Override
     public Response<?> saveDeviceRenewalRequest(DeviceRenewalRequestDTO deviceRenewalRequestDTO) {
 
@@ -87,6 +88,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
         int deviceRenewalListSize = deviceRenewalsList.size();
 
         this.iccidNotFoundCount = 0;
+        incomingNewExpiryDateLessThanExistingExpiryDate=false;
         deviceRenewalsList.stream().forEach(item -> {
 
             String iccidNo = item.getIccidNo();
@@ -112,19 +114,23 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                 try {
                     if (item.getDate() != null) {
                         Date date = inputFormat.parse(item.getDate());
-                        renewalDevice.setNewExpiryDate(date);
-                       Optional< DeviceLazyEntity> deviceLazyEntityOptional= this.deviceLazyRepository.findByIccidNo(device.getIccidNo());
-                           if(deviceLazyEntityOptional.isPresent()){
-                               DeviceLazyEntity deviceLazyEntity= deviceLazyEntityOptional.get();
-                               deviceLazyEntity.setSim1ExpiryDate(date);
-                               deviceLazyEntity.setSim2ExpiryDate(date);
-                               this.deviceLazyRepository.save(deviceLazyEntity);
-                           }
+                            renewalDevice.setNewExpiryDate(date);
+                            Optional<DeviceLazyEntity> deviceLazyEntityOptional = this.deviceLazyRepository.findByIccidNo(device.getIccidNo());
+                            if (deviceLazyEntityOptional.isPresent()) {
+                                DeviceLazyEntity deviceLazyEntity = deviceLazyEntityOptional.get();
+                                deviceLazyEntity.setSim1ExpiryDate(date);
+                                deviceLazyEntity.setSim2ExpiryDate(date);
+                                this.deviceLazyRepository.save(deviceLazyEntity);
+                            }
 
 
                     } else {
                         renewalDevice.setNewExpiryDate(null);
                     }
+
+
+
+
                     DeviceRenewalRequest savedDeviceRenewalObject = deviceRenewalRequestRepository.save(deviceRenewalRequest);
                     renewalDevice.setDeviceRenewalRequest(savedDeviceRenewalObject);
                     RenewalDevice renewalDevice1 = renewalDeviceRepository.save(renewalDevice);
