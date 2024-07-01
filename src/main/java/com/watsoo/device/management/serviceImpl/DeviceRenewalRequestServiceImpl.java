@@ -118,6 +118,7 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
                             Optional<DeviceLazyEntity> deviceLazyEntityOptional = this.deviceLazyRepository.findByIccidNo(device.getIccidNo());
                             if (deviceLazyEntityOptional.isPresent()) {
                                 DeviceLazyEntity deviceLazyEntity = deviceLazyEntityOptional.get();
+                                deviceLazyEntity.setUpdatedAt(new Date());
                                 deviceLazyEntity.setSim1ExpiryDate(date);
                                 deviceLazyEntity.setSim2ExpiryDate(date);
                                 this.deviceLazyRepository.save(deviceLazyEntity);
