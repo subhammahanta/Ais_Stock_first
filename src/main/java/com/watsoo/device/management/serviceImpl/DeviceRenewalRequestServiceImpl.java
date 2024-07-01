@@ -308,7 +308,6 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
         if (reqCode != null && !reqCode.equals("") && !reqCode.isEmpty()) {
 
             byReqCode = this.deviceRenewalRequestRepository.findByReqCode(reqCode);
-
         }
         PaginationV2 paginationV2 = new PaginationV2();
 
