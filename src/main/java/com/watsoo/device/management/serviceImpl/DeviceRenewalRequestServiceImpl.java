@@ -194,39 +194,48 @@ public class DeviceRenewalRequestServiceImpl implements DeviceRenewalRequestServ
         if (genericRequestBody.getSearch() != null && !genericRequestBody.getSearch().isEmpty() && !genericRequestBody.getSearch().equals("")) {
 
             if(genericRequestBody.getSearch().matches("^[0-9]+")){
-                Page<RenewalDevice> collect = this.renewalDeviceRepository
-                        .findAllByImeiNo(genericRequestBody.getSearch(),pageRequest);
+                List<RenewalDevice> collect = this.renewalDeviceRepository
+                        .findAllByImeiNoContaining(genericRequestBody.getSearch().trim());
 
-                List<DeviceRenewalResponseDTO> allById =
-                        collect
-                                .stream()
-                                .map(renew ->
-                                {
-                                    if (renew.getDeviceRenewalRequest().getReqCode() != null && !renew.getDeviceRenewalRequest().getReqCode().equals("")) {
-                                        Optional<DeviceRenewalRequest> byId = this.deviceRenewalRequestRepository.findByReqCode(renew.getDeviceRenewalRequest().getReqCode());
+                HashMap<String,DeviceRenewalResponseDTO> redundantCheckingSettForRequestCode = new HashMap<>();
+                collect
+                        .forEach(renew ->
+                        {
+                            if (renew.getDeviceRenewalRequest().getReqCode() != null && !renew.getDeviceRenewalRequest().getReqCode().equals("")) {
+                                Optional<DeviceRenewalRequest> byId = this.deviceRenewalRequestRepository.findByReqCode(renew.getDeviceRenewalRequest().getReqCode());
 
-                                        logger.info("Data : "+ byId.get().getId() +" "+byId.get().getReqCode()+" "+byId.get().getCreatedBy()+" "+byId.get().getCreatedAt());
-                                        if (byId.isPresent()) {
-                                            Optional<User> user = this.userRepository.findById(byId.get().getCreatedBy());
-                                            if(user.isPresent()){
-                                                DeviceRenewalResponseDTO deviceRenewalResponse = new DeviceRenewalResponseDTO();
-                                                deviceRenewalResponse.setRequestCode(byId.get().getReqCode());
-                                                deviceRenewalResponse.setRequestDate(byId.get().getCreatedAt());
-                                                deviceRenewalResponse.setCreatedBy(user.get().getName());
-                                                deviceRenewalResponse.setDevices(new ArrayList<>());
-                                                deviceRenewalResponse.setTotalDevices(this.renewalDeviceRepository.deviceCountForRequest(byId.get().getId()));
-                                                return deviceRenewalResponse;
-                                            }
-                                        }
+//                                logger.info("Data : " + byId.get().getId() + " " + byId.get().getReqCode() + " " + byId.get().getCreatedBy() + " " + byId.get().getCreatedAt());
+                                if (byId.isPresent() && redundantCheckingSettForRequestCode.get(byId.get().getReqCode()) == null ) {
+                                    Optional<User> user = this.userRepository.findById(byId.get().getCreatedBy());
+                                    if (user.isPresent()) {
+                                        DeviceRenewalResponseDTO deviceRenewalResponse = new DeviceRenewalResponseDTO();
+                                        deviceRenewalResponse.setRequestCode(byId.get().getReqCode());
+                                        deviceRenewalResponse.setRequestDate(byId.get().getCreatedAt());
+                                        deviceRenewalResponse.setCreatedBy(user.get().getName());
+                                        deviceRenewalResponse.setDevices(new ArrayList<>());
+                                        deviceRenewalResponse.setTotalDevices(this.renewalDeviceRepository.deviceCountForRequest(byId.get().getId()));
+                                        redundantCheckingSettForRequestCode.put(deviceRenewalResponse.getRequestCode(),deviceRenewalResponse);
                                     }
-                                    return  null;
-                                })
-                                .collect(Collectors.toList());
+                                }
+                            }
+                        });
 
+                List<DeviceRenewalResponseDTO> allById = redundantCheckingSettForRequestCode
+                        .values()
+                        .stream()
+                        .collect(Collectors.toList());
+
+                List<DeviceRenewalResponseDTO> output = new ArrayList<>();
+
+                //for pagination
+
+                for(int i = (genericRequestBody.getPageNo()*genericRequestBody.getPageSize()),count = 0;i< allById.size() && count < genericRequestBody.getPageSize(); i++,++count){
+                    output.add(allById.get(i));
+                }
 
                 paginationV2.setPageSize(genericRequestBody.getPageSize());
-                paginationV2.setTotalItems(collect.getTotalElements());
-                paginationV2.setItems(allById);
+                paginationV2.setTotalItems(allById.size());
+                paginationV2.setItems(output);
 
                 return paginationV2;
             }else{
