@@ -38,7 +38,7 @@ public interface DeviceRenewalRequestRepository extends JpaRepository<DeviceRene
     @Query(value="select * from device_renewal_request req where req_code = :reqCode",nativeQuery = true)
     Optional<DeviceRenewalRequest> findByReqCode(String reqCode);
 
-    @Query(value = "select * from device_renewal_request where  (DATE(created_at) = :fromDate or  DATE(created_at) =:toDate) or Date(created_at) between :fromDate and :toDate",nativeQuery = true)
+    @Query(value = "select * from device_renewal_request where  created_at >=  :fromDate and  created_at <= :toDate",nativeQuery = true)
     Page<DeviceRenewalRequest> findAllCreatedAtBetween(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate, Pageable pageable);
 
 }

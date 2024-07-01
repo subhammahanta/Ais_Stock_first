@@ -19,6 +19,7 @@ import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 public class DeviceManagementApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(DeviceManagementApplication.class, args);
 	}
 
